@@ -79,7 +79,7 @@ app.use("/", (req, res) => {
 
 ### example
 
-```json
+```js
 {
   /* content tabs */
   "tabs": [
