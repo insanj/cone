@@ -41,7 +41,7 @@ const website = Cone.ConeBuilder.build({
 });
 ```
 
-> NOTE: see [tsconfig.json](tsconfig.json) to configure anything about the build process.
+> NOTE: see [tsconfig.json](https://github.com/insanj/cone/blob/main/tsconfig.json) to configure anything about the build process.
 
 ## Usage
 
@@ -73,7 +73,7 @@ app.use("/", (req, res) => {
 });
 ```
 
-[See example/ for a tiny example of using 🍦 cone with Express to serve a website using an `example.cone` file](example/)
+[See example/ for a tiny example of using 🍦 cone with Express to serve a website using an `example.cone` file](https://github.com/insanj/cone/blob/main/example/)
 
 ## .cone
 
