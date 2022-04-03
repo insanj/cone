@@ -1,5 +1,5 @@
 {
-  "name": "cone",
+  "name": "oogy-cone",
   "version": "0.1.0",
   "description": " 🍦 vanilla js static pwa generator, built in ts for oogy: can you help",
   "type": "module",

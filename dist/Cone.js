@@ -12,13 +12,13 @@ export var Cone;
         }
         get outerHTML() {
             const tagName = this.nodeType;
-            const classStr = this.classList.length < 1 ? '' : ` class="${this.classList.join(" ")}"`;
-            const encodedAttrs = Object.keys(this.attributes).map(attr => {
+            const classStr = this.classList.length < 1 ? "" : ` class="${this.classList.join(" ")}"`;
+            const encodedAttrs = Object.keys(this.attributes).map((attr) => {
                 return ` ${attr}="${this.attributes[attr]}"`;
             });
             const attributesStr = encodedAttrs.join(" ");
-            const template = `<${tagName}${classStr}${attributesStr}>${this.innerText}</${tagName}>`;
-            return template;
+            const encoded = `<${tagName}${classStr}${attributesStr}>${this.innerText}</${tagName}>`;
+            return encoded;
         }
     }
     Cone.ConeElement = ConeElement;
@@ -27,9 +27,9 @@ export var Cone;
             return new ConeBuilder().build(options);
         }
         build(options) {
+            const template = JSON.parse(options.data);
             const element = new ConeElement();
-            element.innerText = options.data;
-            element.setAttribute("style", "font-size: 22px;");
+            element.innerText = template.title;
             const result = element.outerHTML;
             return result;
         }

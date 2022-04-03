@@ -1,40 +1,42 @@
 /**
- * cone 
- * 🍦 vanilla js static pwa generator, built in ts for oogy: can you help 
+ * cone
+ * 🍦 vanilla js static pwa generator, built in ts for oogy: can you help
  * github.com/insanj/cone
  * (c) 2022 Julian Weiss
  */
 export module Cone {
+  /**
+   * Describes the complete 🍦 cone template, usually saved and expected in UTF-8 encoded JSON.
+   */
+  export type OogyConeTemplate = {
+    /**
+     * Website title.
+     */
+    title: string;
+  };
 
   /**
    * Wrapped options for building a full website within the ConeBuilder.
    * @see ConeBuilderInterface
    */
   export type ConeBuilderBuildOptions = {
-
     /**
      * UTF-8 data, usually lifted from a file (in the example app, this is `example.cone` which is easy to read JSON).
      */
     data: string;
-
-  }
+  };
 
   /**
    * Represents the singleton/class version of the ConeBuilder, a great way to get started on generating an entire website in one go.
    */
   export interface ConeBuilderInterface {
-
     build(options: ConeBuilderBuildOptions): string;
-
   }
-
-  // export type ConeBuilderReturnable = string | HTMLElement;
 
   /**
    * Simulates all the necessary 'document' methods and properties so we can run in a Node.js or browser environment.
    */
   export interface ConeElementInterface {
-
     /**
      * HTML Tag name of this element.
      * @example div
@@ -65,11 +67,9 @@ export module Cone {
      * @param value Attribute value, such as `"font-size: 12px;""`
      */
     setAttribute(attribute: string, value: string): void;
-
   }
 
   export class ConeElement implements ConeElementInterface {
-
     nodeType: string = "div";
 
     classList: string[] = [];
@@ -83,41 +83,36 @@ export module Cone {
     }
 
     get outerHTML(): string {
-
       const tagName = this.nodeType;
-      const classStr = this.classList.length < 1 ? '' : ` class="${this.classList.join(" ")}"`;      
-      
-      const encodedAttrs = Object.keys(this.attributes).map(attr => {
-        return ` ${attr}="${this.attributes[attr]}"`
+      const classStr =
+        this.classList.length < 1 ? "" : ` class="${this.classList.join(" ")}"`;
+
+      const encodedAttrs = Object.keys(this.attributes).map((attr) => {
+        return ` ${attr}="${this.attributes[attr]}"`;
       });
       const attributesStr = encodedAttrs.join(" ");
 
-      const template = `<${tagName}${classStr}${attributesStr}>${this.innerText}</${tagName}>`;
+      const encoded = `<${tagName}${classStr}${attributesStr}>${this.innerText}</${tagName}>`;
 
-      return template;
-
+      return encoded;
     }
-
   }
 
   export class ConeBuilder implements ConeBuilderInterface {
-
-    static build(options: ConeBuilderBuildOptions): string {     
+    static build(options: ConeBuilderBuildOptions): string {
       return new ConeBuilder().build(options);
     }
 
     build(options: ConeBuilderBuildOptions): string {
-     
+      const template: OogyConeTemplate = JSON.parse(options.data);
+
       const element = new ConeElement();
 
-      element.innerText = options.data;
+      element.innerText = template.title;
 
       const result = element.outerHTML;
 
       return result;
-
-    }  
-
+    }
   }
-
 }
