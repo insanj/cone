@@ -45,6 +45,22 @@ const website = Cone.ConeBuilder.build({
 
 ## Usage
 
+In Browser:
+
+```html
+<script>
+  const website = Cone.ConeBuilder.build({
+    template: {
+      // 🍦 .cone template goes here
+    },
+  });
+
+  document.body.innerHTML += website;
+</script>
+```
+
+In Express:
+
 ```ts
 const app = express();
 app.use("/", (req, res) => {
@@ -65,19 +81,43 @@ app.use("/", (req, res) => {
 
 ```json
 {
-  "title": "🍦 cone-example"
+  /* content tabs */
+  "tabs": [
+    {
+      /* title of this tab */
+      "title": "🍦 cone example",
+
+      /* content/"body" of this tab */
+      "content": {
+        /* style, which will help the elements look nice */
+        "style": "jumbotron",
+
+        /* list of elements we want to show in this tab */
+        "elements": [
+          {
+            /* this is an image type */
+            "type": "img",
+
+            /* here is the image src attribute, which can be any URL that works from where the site is hosted */
+            "src": "/png/jumbotron.png"
+          },
+          {
+            /* h1 header type, all normal HTML types are used, and inline styles so its easy to customize after generating as well */
+            "type": "h1",
+
+            /* we'll want to fill in the text for the title elements instead of the `src` attribute */
+            "text": "Oogy: Can You Help"
+          },
+          {
+            /* finally, a p element which works as a subtitle in this case on the jumbotron style */
+            "type": "p",
+            "text": "Indie narrative deckbuilder."
+          }
+        ]
+      }
+    }
+  ]
 }
-```
-
-### type
-
-```ts
-export type OogyConeTemplate = {
-  /**
-   * Website title.
-   */
-  title: string;
-};
 ```
 
 ## Author
