@@ -1,0 +1,28 @@
+{
+  "name": "cone",
+  "version": "0.1.0",
+  "description": " 🍦 vanilla js static pwa generator, built in ts for oogy: can you help",
+  "type": "module",
+  "main": "dist/cone.js",
+  "private": "true",
+  "scripts": {
+    "start": "tsc"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/insanj/cone.git"
+  },
+  "author": "insanj",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/insanj/cone/issues"
+  },
+  "homepage": "https://github.com/insanj/cone#readme",
+  "devDependencies": {
+    "typescript": "^4.7.0-dev.20220401"
+  },
+  "files": [
+    "dist/",
+    "src/"
+  ]
+}

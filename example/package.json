@@ -1,0 +1,17 @@
+{
+  "name": "cone-example",
+  "version": "0.1.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "npm install; node index.js"
+  },
+  "type": "module",
+  "author": "insanj",
+  "license": "MIT",
+  "dependencies": {
+    "cone": "file:../",
+    "express": "^4.17.3",
+    "html-element": "^2.3.1"
+  }
+}
