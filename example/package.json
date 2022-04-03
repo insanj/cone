@@ -10,8 +10,7 @@
   "author": "insanj",
   "license": "MIT",
   "dependencies": {
-    "cone": "file:../",
-    "express": "^4.17.3",
-    "html-element": "^2.3.1"
+    "oogy-cone": "file:../",
+    "express": "^4.17.3"
   }
 }

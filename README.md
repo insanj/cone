@@ -1,10 +1,12 @@
 # cone
 
-🍦 vanilla js static pwa generator, built in ts for oogy: can you help
+🍦 vanilla js static pwa generator, built in ts for [Oogy: Can You Help](https://oogycanyouhelp.com).
 
 Does not require any dependencies (uses Typescript interally to generate `Cone.js`).
 
 Wraps all DOM/browser methods and classes so 🍦 cone generates to a string consistently in every environment.
+
+Why? For fun! I thought a completely in-house static website generator would be a good thing to maintain using current ECMAScript standards for my current projects, as well as a demo of some of the techniques from [Oogy: Can You Help](https://oogycanyouhelp.com) itself.
 
 ## Install
 
@@ -25,8 +27,8 @@ Then in any environment:
 ```ts
 import { Cone } from "Cone.js"; // or 'oogy-cone'
 
-const data = {
-  // 🍦 cone template
+const template = {
+  // 🍦 .cone template
 };
 
 // -> or alternatively, in NodeJS contexts:
@@ -35,18 +37,20 @@ const data = {
 // -> just as in browser, you could import a data file from somewhere using <script>
 
 const website = Cone.ConeBuilder.build({
-  data,
+  template,
 });
 ```
+
+> NOTE: see [tsconfig.json](tsconfig.json) to configure anything about the build process.
 
 ## Usage
 
 ```ts
 const app = express();
 app.use("/", (req, res) => {
-  const data = fs.readFileSync("example.cone", "utf8");
+  const template = fs.readFileSync("example.cone", "utf8");
   const website = Cone.ConeBuilder.build({
-    data,
+    template,
   });
   res.set("Content-Type", "text/html");
   res.send(website);

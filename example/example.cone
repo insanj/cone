@@ -1,3 +1,24 @@
 {
-  "title": "🍦 cone-example"
+  "tabs": [
+    {
+      "title": "🍦 cone example",
+      "content": {
+        "style": "jumbotron",
+        "elements": [
+          {
+            "type": "img",
+            "src": "/png/jumbotron.png"
+          },
+          {
+            "type": "h1",
+            "text": "Oogy: Can You Help"
+          },
+          {
+            "type": "p",
+            "text": "Indie narrative deckbuilder."
+          }
+        ]
+      }
+    }
+  ]
 }
