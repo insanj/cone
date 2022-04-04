@@ -68,17 +68,7 @@ export var Cone;
         height: "100%",
         "overflow-y": "scroll",
     };
-    ConeStyleDefault.coneTabBarContainer = {
-        position: "absolute",
-        bottom: "0px",
-        width: "100%",
-        padding: "8px 0px 12px 0px",
-        display: "flex",
-        "align-items": "center",
-        "justify-content": "center",
-    };
     ConeStyleDefault.coneTabContent = {
-        background: "#19132e",
         color: "#2b154d",
         position: "relative",
         width: "100%",
@@ -87,6 +77,17 @@ export var Cone;
         display: "flex",
         "align-items": "center",
         "justify-content": "center",
+    };
+    ConeStyleDefault.coneTabBarContainer = {
+        position: "absolute",
+        bottom: "0px",
+        width: "100%",
+        padding: "8px 0px 12px 0px",
+        display: "flex",
+        "align-items": "center",
+        "justify-content": "center",
+        "border-radius": "12px",
+        background: "rgba(255,255,255,0.8)",
     };
     ConeStyleDefault.coneTabBar = {
         background: "rgba(255, 255, 255, 0.9)",
@@ -106,20 +107,26 @@ export var Cone;
         border: "2px solid #2b154d",
         "border-radius": "10px",
         cursor: "pointer",
+        color: "#2b154d",
+        "white-space": "pre",
     };
     ConeStyleDefault.coneJumbotron = {
         position: "relative",
-        padding: "20px 0px",
-        width: "100%",
+        padding: "20px 20px",
+        "max-width": "100%",
         display: "flex",
         "flex-direction": "column",
         "align-items": "center",
         "justify-content": "center",
+        "border-radius": "12px",
+        background: "rgba(0,0,0,0.05)",
+        "box-shadow": "inset 0px 0px 10px 0px rgb(0 0 0 / 20%)",
     };
     ConeStyleDefault.coneJumbotronImg = {
         position: "relative",
-        width: "75%",
+        width: "calc(100% - 40px)",
         "max-width": "1080px",
+        "min-width": "720px",
         height: "auto",
         "border-radius": "12px",
         "box-shadow": "0px 2px 10px 4px rgb(0 0 0 / 20%)",
@@ -175,12 +182,32 @@ export var Cone;
                 tabContentElement.classList = ["oogy-cone-tab-content"];
                 tabContentElement.id = `oogy-cone-tab-content-${i}`;
                 tabContentElement.style = ConeStyleDefault.coneTabContent;
+                tabContentContainerElement.appendChild(tabContentElement);
+                const tabItemElement = this.buildTabItem(tab.title);
+                tabItemElement.onclick = `
+        for (let el of document.getElementsByClassName('${tabItemElement.classList[0]}')) {
+          el.style['background-color'] = '#fff'; el.style.color = '#2b154d'; 
+        }
+        
+        this.style['background-color'] = '#2b154d';
+        this.style.color = '#fff';
+
+        for (let el of document.getElementsByClassName('${tabContentElement.classList[0]}')) {
+          el.style.display = 'none'; 
+        }
+
+        document.getElementById('${tabContentElement.id}').style.display = 'flex';
+        `
+                    .trim()
+                    .replace(/\n/g, "");
+                tabItemElement.style = ConeStyleDefault.coneTab;
                 if (i > 0) {
                     tabContentElement.style.display = "none";
                 }
-                tabContentContainerElement.appendChild(tabContentElement);
-                const tabItemElement = this.buildTabItem(tab.title, `for (let el of document.getElementsByClassName('${tabContentElement.classList[0]}')) { el.style.display = 'none'; } document.getElementById('${tabContentElement.id}').style.display = 'flex';`);
-                tabItemElement.style = ConeStyleDefault.coneTab;
+                else {
+                    tabItemElement.style["background-color"] = "#2b154d";
+                    tabItemElement.style.color = "#fff";
+                }
                 tabBarElement.appendChild(tabItemElement);
                 i++;
             }
@@ -192,10 +219,9 @@ export var Cone;
             element.classList = ["oogy-cone-tab-bar"];
             return element;
         }
-        buildTabItem(title, onclick) {
+        buildTabItem(title) {
             const element = new ConeElement();
             element.classList = ["oogy-cone-tab"];
-            element.onclick = onclick;
             element.innerText = title;
             return element;
         }

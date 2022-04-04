@@ -1,7 +1,7 @@
 {
   "tabs": [
     {
-      "title": "🐏 Home",
+      "title": "🐏  Home",
       "content": {
         "style": "jumbotron",
         "elements": [
@@ -21,7 +21,7 @@
       }
     },
     {
-      "title": "🎥 Trailers",
+      "title": "🎥  Trailers",
       "content": {
         "style": "jumbotron",
         "elements": [
@@ -41,7 +41,7 @@
       }
     },
     {
-      "title": "📬 Contact",
+      "title": "📬  Contact",
       "content": {
         "style": "jumbotron",
         "elements": [

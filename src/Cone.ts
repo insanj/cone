@@ -241,6 +241,21 @@ export module Cone {
     };
 
     /**
+     * .oogy-cone-tab-content
+     */
+    static coneTabContent: ConeStyle = {
+      // background: "#19132e",
+      color: "#2b154d",
+      position: "relative",
+      width: "100%",
+      "min-height": "calc(100% - 70px)",
+      "padding-bottom": "70px",
+      display: "flex",
+      "align-items": "center",
+      "justify-content": "center",
+    };
+
+    /**
      * .oogy-cone-tab-bar-container
      */
     static coneTabBarContainer: ConeStyle = {
@@ -251,21 +266,8 @@ export module Cone {
       display: "flex",
       "align-items": "center",
       "justify-content": "center",
-    };
-
-    /**
-     * .oogy-cone-tab-content
-     */
-    static coneTabContent: ConeStyle = {
-      background: "#19132e",
-      color: "#2b154d",
-      position: "relative",
-      width: "100%",
-      "min-height": "calc(100% - 70px)",
-      "padding-bottom": "70px",
-      display: "flex",
-      "align-items": "center",
-      "justify-content": "center",
+      "border-radius": "12px",
+      background: "rgba(255,255,255,0.8)",
     };
 
     /**
@@ -293,6 +295,8 @@ export module Cone {
       border: "2px solid #2b154d",
       "border-radius": "10px",
       cursor: "pointer",
+      color: "#2b154d",
+      "white-space": "pre",
     };
 
     /**
@@ -300,12 +304,15 @@ export module Cone {
      */
     static coneJumbotron: ConeStyle = {
       position: "relative",
-      padding: "20px 0px",
-      width: "100%",
+      padding: "20px 20px",
+      "max-width": "100%",
       display: "flex",
       "flex-direction": "column",
       "align-items": "center",
       "justify-content": "center",
+      "border-radius": "12px",
+      background: "rgba(0,0,0,0.05)",
+      "box-shadow": "inset 0px 0px 10px 0px rgb(0 0 0 / 20%)",
     };
 
     /**
@@ -313,8 +320,9 @@ export module Cone {
      */
     static coneJumbotronImg: ConeStyle = {
       position: "relative",
-      width: "75%",
+      width: "calc(100% - 40px)",
       "max-width": "1080px",
+      "min-width": "720px",
       height: "auto",
       "border-radius": "12px",
       "box-shadow": "0px 2px 10px 4px rgb(0 0 0 / 20%)",
@@ -404,19 +412,38 @@ export module Cone {
         tabContentElement.classList = ["oogy-cone-tab-content"];
         tabContentElement.id = `oogy-cone-tab-content-${i}`;
         tabContentElement.style = ConeStyleDefault.coneTabContent;
-
-        if (i > 0) {
-          tabContentElement.style.display = "none"; // autohide tab after the 1st one
-        }
-
         tabContentContainerElement.appendChild(tabContentElement);
 
-        const tabItemElement = this.buildTabItem(
-          tab.title,
-          `for (let el of document.getElementsByClassName('${tabContentElement.classList[0]}')) { el.style.display = 'none'; } document.getElementById('${tabContentElement.id}').style.display = 'flex';`
-        );
+        const tabItemElement = this.buildTabItem(tab.title);
+
+        tabItemElement.onclick = `
+        for (let el of document.getElementsByClassName('${tabItemElement.classList[0]}')) {
+          el.style['background-color'] = '#fff'; el.style.color = '#2b154d'; 
+        }
+        
+        this.style['background-color'] = '#2b154d';
+        this.style.color = '#fff';
+
+        for (let el of document.getElementsByClassName('${tabContentElement.classList[0]}')) {
+          el.style.display = 'none'; 
+        }
+
+        document.getElementById('${tabContentElement.id}').style.display = 'flex';
+        `
+          .trim()
+          .replace(/\n/g, "");
 
         tabItemElement.style = ConeStyleDefault.coneTab;
+
+        // handle state-based visibility traits
+        if (i > 0) {
+          tabContentElement.style.display = "none";
+          // autohide tab after the 1st one
+        } else {
+          tabItemElement.style["background-color"] = "#2b154d";
+          tabItemElement.style.color = "#fff";
+          // visually autoselect 1st tab
+        }
 
         tabBarElement.appendChild(tabItemElement);
 
@@ -435,10 +462,9 @@ export module Cone {
       return element;
     }
 
-    private buildTabItem(title: string, onclick: string): ConeElementInterface {
+    private buildTabItem(title: string): ConeElementInterface {
       const element = new ConeElement();
       element.classList = ["oogy-cone-tab"];
-      element.onclick = onclick;
       element.innerText = title;
       return element;
     }
