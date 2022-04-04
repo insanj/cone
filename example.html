@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>🍦 oogy-cone example</title>
+  </head>
+  <body>
+    <script type="module">
+      import { Cone } from "./dist/Cone.min.js";
+      const template = {
+        tabs: [
+          {
+            title: "🐏  Home",
+            content: {
+              style: "jumbotron",
+              elements: [
+                {
+                  type: "img",
+                  src: "/example/png/jumbotron.png",
+                },
+                {
+                  type: "h1",
+                  text: "Oogy: Can You Help",
+                },
+                {
+                  type: "p",
+                  text: "Indie narrative deckbuilder.",
+                },
+              ],
+            },
+          },
+          {
+            title: "🎥  Trailers",
+            content: {
+              style: "jumbotron",
+              align: "bottom-center",
+              elements: [
+                {
+                  type: "img",
+                  src: "/example/png/jumbotron.png",
+                },
+                {
+                  type: "h1",
+                  text: "Trailers",
+                },
+                {
+                  type: "p",
+                  text: "Learn more about Oogy: Can You Help",
+                },
+              ],
+            },
+          },
+          {
+            title: "📬  Contact",
+            content: {
+              style: "jumbotron",
+              elements: [
+                {
+                  type: "img",
+                  src: "/example/png/jumbotron.png",
+                },
+                {
+                  type: "h1",
+                  text: "Contact",
+                },
+                {
+                  type: "p",
+                  text: "Reach out about Oogy: Can You Help",
+                },
+              ],
+            },
+          },
+        ],
+      };
+
+      const generated = Cone.ConeBuilder.build({
+        template,
+      });
+
+      document.body.innerHTML = generated;
+    </script>
+  </body>
+</html>

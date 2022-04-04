@@ -206,7 +206,9 @@ export var Cone;
                 options.template == undefined) {
                 return "🍦 cone says: template not provided! I can't do anything";
             }
-            const template = JSON.parse(options.template);
+            const template = typeof options.template === "string"
+                ? JSON.parse(options.template)
+                : options.template;
             const styleBuilder = new ConeStyleBuilder();
             if (template.style) {
                 styleBuilder.reference = template.style;

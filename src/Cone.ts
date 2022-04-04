@@ -238,7 +238,7 @@ export module Cone {
     /**
      * UTF-8 data, usually lifted from a file (in the example app, this is `example.cone` which is easy to read JSON).
      */
-    template: string;
+    template: string | Record<string, string>;
   };
 
   /**
@@ -458,7 +458,11 @@ export module Cone {
         return "🍦 cone says: template not provided! I can't do anything";
       }
 
-      const template: ConeTemplate = JSON.parse(options.template);
+      const template: ConeTemplate =
+        typeof options.template === "string"
+          ? JSON.parse(options.template)
+          : options.template;
+
       const styleBuilder = new ConeStyleBuilder();
 
       if (template.style) {

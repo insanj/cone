@@ -1,6 +1,6 @@
 # cone
 
-🍦 vanilla js static pwa generator, built in ts for [Oogy: Can You Help](https://oogycanyouhelp.com).
+🍦 vanilla js static pwa generator, built in ts for [Oogy: Can You Help](https://oogycanyouhelp.com) (~10kB)
 
 Does not require any dependencies (uses Typescript interally to generate `Cone.js`).
 
@@ -14,10 +14,10 @@ Why? For fun! I thought a completely in-house static website generator would be 
 
 ## Install
 
-In Browser, download `dist/` and place the `Cone.js` somewhere in your website.
+In Browser, download `dist/` and place the `Cone.js` or `Cone.min.js` somewhere in your website.
 
 ```html
-<script src="Cone.js"></script>
+<script src="Cone.min.js"></script>
 ```
 
 In NodeJS, as simple as:
@@ -52,7 +52,8 @@ const website = Cone.ConeBuilder.build({
 In Browser:
 
 ```html
-<script>
+<script type="module">
+  import { Cone } from "./Cone.min.js";
   const website = Cone.ConeBuilder.build({
     template: {
       // 🍦 .cone template goes here
@@ -61,6 +62,14 @@ In Browser:
 
   document.body.innerHTML += website;
 </script>
+```
+
+[See example.html for a tiny example of using 🍦 cone with a single .html file, and no external files besides the Cone.min.js release](https://github.com/insanj/cone/blob/main/example.html/)
+
+Use the following command to experiment with Browser usage locally:
+
+```bash
+npm run example-html
 ```
 
 In Express:
@@ -79,47 +88,63 @@ app.use("/", (req, res) => {
 
 [See example/ for a tiny example of using 🍦 cone with Express to serve a website using an `example.cone` file](https://github.com/insanj/cone/blob/main/example/)
 
+Use the following command to experiment with Node usage locally:
+
+```ts
+npm run example
+```
+
 ## .cone
 
 ### example
 
 ```js
 {
-  /* optional style attributes */
+  /**
+   * optional:
+   * style attributes, defaults to "#fff" & "#2b154d"
+   */
   "style": {
     "background": "black", /* can be any CSS supported val */
     "color": "#fff"
   },
 
-  /* content tabs */
+  /** content tabs */
   "tabs": [
     {
-      /* title of this tab */
+      /** title of this tab */
       "title": "🍦 cone example",
 
-      /* content/"body" of this tab */
+      /** content/"body" of this tab */
       "content": {
-        /* style, which will help the elements look nice */
+        /** style, which will help the elements look nice */
         "style": "jumbotron",
 
-        /* list of elements we want to show in this tab */
+        /**
+         * optional: alignment of alignable items within the
+         * elements list (excludes large media, ex: img, video)
+         * defaults to "bottom-left"
+        */
+        "align": "bottom-center",
+
+        /** list of elements we want to show in this tab */
         "elements": [
           {
-            /* this is an image type */
+            /** this is an image type */
             "type": "img",
 
-            /* here is the image src attribute, which can be any URL that works from where the site is hosted */
+            /** here is the image src attribute, which can be any URL that works from where the site is hosted */
             "src": "/png/jumbotron.png"
           },
           {
-            /* h1 header type, all normal HTML types are used, and inline styles so its easy to customize after generating as well */
+            /** h1 header type, all normal HTML types are used, and inline styles so its easy to customize after generating as well */
             "type": "h1",
 
-            /* we'll want to fill in the text for the title elements instead of the `src` attribute */
+            /** we'll want to fill in the text for the title elements instead of the `src` attribute */
             "text": "Oogy: Can You Help"
           },
           {
-            /* finally, a p element which works as a subtitle in this case on the jumbotron style */
+            /** finally, a p element which works as a subtitle in this case on the jumbotron style */
             "type": "p",
             "text": "Indie narrative deckbuilder."
           }

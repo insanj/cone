@@ -1,12 +1,15 @@
 {
   "name": "oogy-cone",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": " 🍦 vanilla js static pwa generator, built in ts for oogy: can you help",
   "type": "module",
-  "main": "dist/cone.js",
+  "main": "dist/Cone.js",
   "private": "true",
   "scripts": {
-    "start": "tsc"
+    "start": "tsc",
+    "release": "cat dist/Cone.js | tr -s '[:blank:]' | tr -d '\n' > dist/Cone.min.js",
+    "example": "npm start; cd example && npm start",
+    "example-html": "npm start; npm run release; python3 -m http.server 4000"
   },
   "repository": {
     "type": "git",
