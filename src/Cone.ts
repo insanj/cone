@@ -339,6 +339,7 @@ export module Cone {
         "border-radius": "12px",
         background: "rgba(0,0,0,0.05)",
         "box-shadow": "inset 0px 0px 10px 0px rgb(0 0 0 / 20%)",
+        animation: "fadeIn 0.6s ease-out",
       };
     }
 
@@ -467,13 +468,13 @@ export module Cone {
         this.style.color = '${styleBuilder.reference.background}';
 
         for (let el of document.getElementsByClassName('${tabContentElement.classList[0]}')) {
-          el.style.display = 'none'; 
+          el.style.display = 'none';
         }
 
         document.getElementById('${tabContentElement.id}').style.display = 'flex';
         `
           .trim()
-          .replace(/\n/g, "");
+          .replace(/\n\s+/g, "");
 
         tabItemElement.style = styleBuilder.coneTab;
 
@@ -496,7 +497,10 @@ export module Cone {
       // generate final string from the resulting element, which until now
       // was very close if not identical to the in-DOM result (document.createElement)
       const result = container.outerHTML;
-      return result;
+      const animationKeyframesHTML = `<style class='oogy-cone-animations'>@keyframes fadeOut { 100% { opacity: 0.2; transform: scale(0.8, 0.8) translate(0, calc(100% + 80px));} } @keyframes fadeIn { 0% { opacity: 0.2; transform: scale(0.8, 0.8) translate(0, calc(100% + 80px)); background: transparent; border-radius: 0px; box-shadow: none; } }</style>`;
+
+      const styleAndResult = `${animationKeyframesHTML}${result}`;
+      return styleAndResult;
     }
 
     private buildTabBar(size: number): ConeElementInterface {
