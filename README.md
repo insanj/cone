@@ -85,6 +85,12 @@ app.use("/", (req, res) => {
 
 ```js
 {
+  /* optional style attributes */
+  "style": {
+    "background": "black", /* can be any CSS supported val */
+    "color": "#fff"
+  },
+
   /* content tabs */
   "tabs": [
     {

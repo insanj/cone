@@ -10,6 +10,8 @@ export module Cone {
    */
   export type ConeTemplate = {
     tabs: ConeTemplateTab[];
+
+    style?: ConeStyle;
   };
 
   /**
@@ -212,139 +214,170 @@ export module Cone {
    */
   export type ConeStyle = Record<string, string>;
 
+  export const kConeStyleDefaultReference: ConeStyle = {
+    background: "#fff",
+    color: "#2b154d",
+  };
+
   /**
-   * Represents the specific styles for supported elements, wrapped in an abstract class for ease of use
+   * Represents the specific styles for supported elements
    */
-  export abstract class ConeStyleDefault {
+  export class ConeStyleBuilder {
+    /**
+     * Will be used for color and background information.
+     */
+    reference: ConeStyle = kConeStyleDefaultReference;
+
     /**
      * .oogy-cone
      */
-    static cone: ConeStyle = {
-      "font-family": "system-ui",
-      position: "absolute",
-      top: "0px",
-      left: "0px",
-      width: "100%",
-      height: "100%",
-      display: "flex",
-      overflow: "hidden",
-    };
-
-    /**
-     * .oogy-cone-tab-content-container
-     */
-    static coneTabContentContainer: ConeStyle = {
-      position: "relative",
-      width: "100%",
-      height: "100%",
-      "overflow-y": "scroll",
-    };
-
-    /**
-     * .oogy-cone-tab-content
-     */
-    static coneTabContent: ConeStyle = {
-      // background: "#19132e",
-      color: "#2b154d",
-      position: "relative",
-      width: "100%",
-      "min-height": "calc(100% - 70px)",
-      "padding-bottom": "70px",
-      display: "flex",
-      "align-items": "center",
-      "justify-content": "center",
-    };
+    get cone(): ConeStyle {
+      return {
+        "font-family": "system-ui",
+        position: "absolute",
+        top: "0px",
+        left: "0px",
+        width: "100%",
+        height: "100%",
+        display: "flex",
+        overflow: "hidden",
+      };
+    }
 
     /**
      * .oogy-cone-tab-bar-container
      */
-    static coneTabBarContainer: ConeStyle = {
-      position: "absolute",
-      bottom: "0px",
-      width: "100%",
-      padding: "8px 0px 12px 0px",
-      display: "flex",
-      "align-items": "center",
-      "justify-content": "center",
-      "border-radius": "12px",
-      background: "rgba(255,255,255,0.8)",
-    };
+    get coneTabBarContainer(): ConeStyle {
+      return {
+        position: "absolute",
+        bottom: "0px",
+        width: "100%",
+        padding: "8px 0px 12px 0px",
+        display: "flex",
+        "align-items": "center",
+        "justify-content": "center",
+        "border-radius": "12px",
+        "z-index": "3",
+        background: this.reference.background,
+      };
+    }
 
     /**
      * .oogy-cone-tab-bar
      */
-    static coneTabBar: ConeStyle = {
-      background: "rgba(255, 255, 255, 0.9)",
-      "backdrop-filter": "blur(10px)",
-      color: "#2b154d",
-      "font-weight": "500",
-      padding: "10px",
-      "border-radius": "12px",
-      "box-shadow": "0px 1px 2px 1px rgba(0, 0, 0, 0.3)",
-      "z-index": "3",
-      display: "flex",
-      gap: "10px",
-      "user-select": "none",
-    };
+    get coneTabBar(): ConeStyle {
+      return {
+        background: this.reference.background,
+        "backdrop-filter": "blur(10px)",
+        "font-weight": "500",
+        padding: "10px",
+        "border-radius": "12px",
+        "box-shadow": "0px 1px 2px 1px rgba(0, 0, 0, 0.3)",
+        "z-index": "3",
+        display: "flex",
+        gap: "10px",
+        "user-select": "none",
+      };
+    }
 
     /**
      * .oogy-cone-tab
      */
-    static coneTab: ConeStyle = {
-      padding: "5px 20px",
-      border: "2px solid #2b154d",
-      "border-radius": "10px",
-      cursor: "pointer",
-      color: "#2b154d",
-      "white-space": "pre",
-    };
+    get coneTab(): ConeStyle {
+      return {
+        padding: "5px 20px",
+        border: `2px solid ${this.reference.color}`,
+        "border-radius": "10px",
+        cursor: "pointer",
+        color: this.reference.color,
+        "white-space": "pre",
+      };
+    }
+
+    /**
+     * .oogy-cone-tab-content-container
+     */
+    get coneTabContentContainer(): ConeStyle {
+      return {
+        position: "relative",
+        width: "100%",
+        height: "100%",
+        "overflow-y": "scroll",
+        background: this.reference.background,
+      };
+    }
+
+    /**
+     * .oogy-cone-tab-content
+     */
+    get coneTabContent(): ConeStyle {
+      return {
+        // background: this.reference.background,
+        color: this.reference.color,
+        position: "relative",
+        width: "100%",
+        "min-height": "calc(100% - 70px)",
+        "padding-bottom": "70px",
+        display: "flex",
+        "align-items": "center",
+        "justify-content": "center",
+      };
+    }
 
     /**
      * .oogy-cone-jumbotron
      */
-    static coneJumbotron: ConeStyle = {
-      position: "relative",
-      padding: "20px 20px",
-      "max-width": "100%",
-      display: "flex",
-      "flex-direction": "column",
-      "align-items": "center",
-      "justify-content": "center",
-      "border-radius": "12px",
-      background: "rgba(0,0,0,0.05)",
-      "box-shadow": "inset 0px 0px 10px 0px rgb(0 0 0 / 20%)",
-    };
+    get coneJumbotron(): ConeStyle {
+      return {
+        position: "relative",
+        padding: "20px 20px",
+        "max-width": "100%",
+        display: "flex",
+        "flex-direction": "column",
+        "align-items": "center",
+        "justify-content": "center",
+        "border-radius": "12px",
+        background: "rgba(0,0,0,0.05)",
+        "box-shadow": "inset 0px 0px 10px 0px rgb(0 0 0 / 20%)",
+      };
+    }
 
     /**
      * .oogy-cone-jumbotron img
      */
-    static coneJumbotronImg: ConeStyle = {
-      position: "relative",
-      width: "calc(100% - 40px)",
-      "max-width": "1080px",
-      "min-width": "720px",
-      height: "auto",
-      "border-radius": "12px",
-      "box-shadow": "0px 2px 10px 4px rgb(0 0 0 / 20%)",
-    };
+    get coneJumbotronImg(): ConeStyle {
+      return {
+        position: "relative",
+        width: "calc(100% - 40px)",
+        "max-width": "1080px",
+        "min-width": "720px",
+        height: "auto",
+        "border-radius": "12px",
+        "box-shadow": "0px 2px 10px 4px rgb(0 0 0 / 20%)",
+      };
+    }
 
     /**
      * .oogy-cone-jumbotron h1
      */
-    static coneJumbotronH1: ConeStyle = {
-      "z-index": "1",
-      position: "absolute",
-      bottom: "54px",
-    };
+    get coneJumbotronH1(): ConeStyle {
+      return {
+        "z-index": "1",
+        position: "absolute",
+        bottom: "54px",
+      };
+    }
 
     /**
      * .oogy-cone-jumbotron p
      */
-    static coneJumbotronP: ConeStyle = {
-      "z-index": "1",
-      position: "absolute",
-      bottom: "38px",
-    };
+    get coneJumbotronP(): ConeStyle {
+      return {
+        "z-index": "1",
+        position: "absolute",
+        bottom: "38px",
+      };
+    }
   }
 
   /**
@@ -377,52 +410,61 @@ export module Cone {
       }
 
       const template: ConeTemplate = JSON.parse(options.template);
+      const styleBuilder = new ConeStyleBuilder();
+
+      if (template.style) {
+        styleBuilder.reference = template.style;
+      }
 
       const container = new ConeElement();
       container.classList = [
         "oogy-cone", // potential area for future schema exposure
       ];
 
-      container.style = ConeStyleDefault.cone;
+      container.style = styleBuilder.cone;
 
       // build tab content container (where the main "body" shows)
       const tabContentContainerElement = new ConeElement();
       tabContentContainerElement.classList = [
         "oogy-cone-tab-content-container",
       ];
-      tabContentContainerElement.style =
-        ConeStyleDefault.coneTabContentContainer;
+      tabContentContainerElement.style = styleBuilder.coneTabContentContainer;
       container.appendChild(tabContentContainerElement);
 
       // build the tab bar, that shows at the bottom at toggles content elements
       const tabBarContainerElement = new ConeElement();
       tabBarContainerElement.classList = ["oogy-cone-tab-bar-container"];
-      tabBarContainerElement.style = ConeStyleDefault.coneTabBarContainer;
+      tabBarContainerElement.style = styleBuilder.coneTabBarContainer;
       container.appendChild(tabBarContainerElement);
 
       const tabBarElement = this.buildTabBar(template.tabs.length);
       tabBarElement.classList = ["oogy-cone-tab-bar"];
-      tabBarElement.style = ConeStyleDefault.coneTabBar;
+      tabBarElement.style = styleBuilder.coneTabBar;
       tabBarContainerElement.appendChild(tabBarElement);
 
       // - build tab bar items for each thing
       let i = 0;
       for (let tab of template.tabs) {
-        const tabContentElement = this.buildTabContent(tab.content);
+        const tabContentElement = this.buildTabContent(
+          styleBuilder,
+          tab.content
+        );
+
         tabContentElement.classList = ["oogy-cone-tab-content"];
         tabContentElement.id = `oogy-cone-tab-content-${i}`;
-        tabContentElement.style = ConeStyleDefault.coneTabContent;
+        tabContentElement.style = styleBuilder.coneTabContent;
         tabContentContainerElement.appendChild(tabContentElement);
 
         const tabItemElement = this.buildTabItem(tab.title);
 
         tabItemElement.onclick = `
         for (let el of document.getElementsByClassName('${tabItemElement.classList[0]}')) {
-          el.style['background-color'] = '#fff'; el.style.color = '#2b154d'; 
+          el.style['background-color'] = '${styleBuilder.reference.background}';
+          el.style.color = '${styleBuilder.reference.color}';
         }
         
-        this.style['background-color'] = '#2b154d';
-        this.style.color = '#fff';
+        this.style['background-color'] = '${styleBuilder.reference.color}';
+        this.style.color = '${styleBuilder.reference.background}';
 
         for (let el of document.getElementsByClassName('${tabContentElement.classList[0]}')) {
           el.style.display = 'none'; 
@@ -433,15 +475,16 @@ export module Cone {
           .trim()
           .replace(/\n/g, "");
 
-        tabItemElement.style = ConeStyleDefault.coneTab;
+        tabItemElement.style = styleBuilder.coneTab;
 
         // handle state-based visibility traits
         if (i > 0) {
           tabContentElement.style.display = "none";
           // autohide tab after the 1st one
         } else {
-          tabItemElement.style["background-color"] = "#2b154d";
-          tabItemElement.style.color = "#fff";
+          tabItemElement.style["background-color"] =
+            styleBuilder.reference.color;
+          tabItemElement.style.color = styleBuilder.reference.background;
           // visually autoselect 1st tab
         }
 
@@ -470,6 +513,7 @@ export module Cone {
     }
 
     private buildTabContent(
+      styleBuilder: ConeStyleBuilder,
       content: ConeTemplateTabContent
     ): ConeElementInterface {
       const container = new ConeElement();
@@ -482,7 +526,7 @@ export module Cone {
         default:
         case ConeTemplateTabContentStyle.jumbotron:
           contentElement.classList = ["oogy-cone-jumbotron"];
-          contentElement.style = ConeStyleDefault.coneJumbotron;
+          contentElement.style = styleBuilder.coneJumbotron;
           break;
       }
 
@@ -498,13 +542,13 @@ export module Cone {
               break; // unexpected err case here, error understanding template
             }
             contentItemElement.setAttribute("src", contentItem.src!);
-            contentItemElement.style = ConeStyleDefault.coneJumbotronImg;
+            contentItemElement.style = styleBuilder.coneJumbotronImg;
             break;
           case "h1":
-            contentItemElement.style = ConeStyleDefault.coneJumbotronH1;
+            contentItemElement.style = styleBuilder.coneJumbotronH1;
             break;
           case "p":
-            contentItemElement.style = ConeStyleDefault.coneJumbotronP;
+            contentItemElement.style = styleBuilder.coneJumbotronP;
             break;
         }
 

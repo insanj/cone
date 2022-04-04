@@ -1,4 +1,8 @@
 {
+  "style": {
+    "background": "#fff",
+    "color": "#2b154d"
+  },
   "tabs": [
     {
       "title": "🐏  Home",
