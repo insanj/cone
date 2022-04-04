@@ -1,5 +1,18 @@
 export var Cone;
 (function (Cone) {
+    let ConeTemplateTabContentAlignmentVertical;
+    (function (ConeTemplateTabContentAlignmentVertical) {
+        ConeTemplateTabContentAlignmentVertical["top"] = "top";
+        ConeTemplateTabContentAlignmentVertical["center"] = "center";
+        ConeTemplateTabContentAlignmentVertical["bottom"] = "bottom";
+    })(ConeTemplateTabContentAlignmentVertical = Cone.ConeTemplateTabContentAlignmentVertical || (Cone.ConeTemplateTabContentAlignmentVertical = {}));
+    let ConeTemplateTabContentAlignmentHorizontal;
+    (function (ConeTemplateTabContentAlignmentHorizontal) {
+        ConeTemplateTabContentAlignmentHorizontal["left"] = "left";
+        ConeTemplateTabContentAlignmentHorizontal["center"] = "center";
+        ConeTemplateTabContentAlignmentHorizontal["right"] = "right";
+    })(ConeTemplateTabContentAlignmentHorizontal = Cone.ConeTemplateTabContentAlignmentHorizontal || (Cone.ConeTemplateTabContentAlignmentHorizontal = {}));
+    Cone.kConeTemplateTabContentAlignmentDefault = "bottom-left";
     let ConeTemplateTabContentStyle;
     (function (ConeTemplateTabContentStyle) {
         ConeTemplateTabContentStyle["jumbotron"] = "jumbotron";
@@ -26,6 +39,9 @@ export var Cone;
         }
         appendChild(element) {
             this.children.push(element);
+        }
+        prepend(element) {
+            this.children.unshift(element);
         }
         get outerHTML() {
             const tagName = this.nodeType;
@@ -157,16 +173,22 @@ export var Cone;
         }
         get coneJumbotronH1() {
             return {
-                "z-index": "1",
-                position: "absolute",
-                bottom: "54px",
+                margin: "0px",
             };
         }
         get coneJumbotronP() {
             return {
+                margin: "0px",
+            };
+        }
+        get coneAlignableBox() {
+            return {
                 "z-index": "1",
                 position: "absolute",
-                bottom: "38px",
+                width: "calc(100% - 140px)",
+                height: "calc(100% - 100px)",
+                display: "flex",
+                "flex-direction": "column",
             };
         }
     }
@@ -273,6 +295,48 @@ export var Cone;
                     contentElement.style = styleBuilder.coneJumbotron;
                     break;
             }
+            const alignableTypes = ["h1", "p"];
+            const contentItemElementAlignableBox = new ConeElement();
+            contentItemElementAlignableBox.classList = ["oogy-cone-alignable-box"];
+            contentItemElementAlignableBox.style = styleBuilder.coneAlignableBox;
+            const contentAlign = !content.align
+                ? Cone.kConeTemplateTabContentAlignmentDefault
+                : content.align;
+            let contentAlignParts = contentAlign.split("-");
+            if (!contentAlignParts || contentAlignParts.length < 2) {
+                contentAlignParts = Cone.kConeTemplateTabContentAlignmentDefault.split("-");
+            }
+            const verticalAlignStr = contentAlignParts[0];
+            const horizontalAlignStr = contentAlignParts[1];
+            switch (verticalAlignStr) {
+                case ConeTemplateTabContentAlignmentVertical.top:
+                    contentItemElementAlignableBox.style["justify-content"] =
+                        "flex-start";
+                    break;
+                case ConeTemplateTabContentAlignmentVertical.center:
+                    contentItemElementAlignableBox.style["justify-content"] = "center";
+                    break;
+                default:
+                case ConeTemplateTabContentAlignmentVertical.bottom:
+                    contentItemElementAlignableBox.style["justify-content"] = "flex-end";
+                    break;
+            }
+            switch (horizontalAlignStr) {
+                default:
+                case ConeTemplateTabContentAlignmentHorizontal.left:
+                    contentItemElementAlignableBox.style["text-align"] = "left";
+                    contentItemElementAlignableBox.style["align-items"] = "flex-start";
+                    break;
+                case ConeTemplateTabContentAlignmentHorizontal.center:
+                    contentItemElementAlignableBox.style["text-align"] = "center";
+                    contentItemElementAlignableBox.style["align-items"] = "center";
+                    break;
+                case ConeTemplateTabContentAlignmentHorizontal.right:
+                    contentItemElementAlignableBox.style["text-align"] = "right";
+                    contentItemElementAlignableBox.style["align-items"] = "flex-end";
+                    break;
+            }
+            contentElement.appendChild(contentItemElementAlignableBox);
             for (let contentItem of content.elements) {
                 const contentItemElement = new ConeElement();
                 contentItemElement.nodeType = contentItem.type;
@@ -296,7 +360,12 @@ export var Cone;
                 if (contentItem.text !== undefined) {
                     contentItemElement.innerText = contentItem.text;
                 }
-                contentElement.appendChild(contentItemElement);
+                if (alignableTypes.includes(contentItem.type)) {
+                    contentItemElementAlignableBox.appendChild(contentItemElement);
+                }
+                else {
+                    contentElement.prepend(contentItemElement);
+                }
             }
             return container;
         }

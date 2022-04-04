@@ -29,6 +29,22 @@ export module Cone {
     content: ConeTemplateTabContent;
   };
 
+  export type ConeTemplateTabContentAlignment = string;
+
+  export enum ConeTemplateTabContentAlignmentVertical {
+    top = "top",
+    center = "center",
+    bottom = "bottom",
+  }
+
+  export enum ConeTemplateTabContentAlignmentHorizontal {
+    left = "left",
+    center = "center",
+    right = "right",
+  }
+
+  export const kConeTemplateTabContentAlignmentDefault = "bottom-left";
+
   export type ConeTemplateTabContent = {
     /**
      * Tabs can have different layouts, this defines what we will expect to see in this tab's content.
@@ -40,6 +56,11 @@ export module Cone {
      * @see ConeElementInterface
      */
     elements: ConeTemplateTabContentElement[];
+
+    /**
+     * Alignment for alignable elements (usually, images/video/big content are not alignable, but everything else is)
+     */
+    align?: ConeTemplateTabContentAlignment;
   };
 
   export type ConeTemplateTabContentElement = {
@@ -125,6 +146,13 @@ export module Cone {
      * @param element
      */
     appendChild(element: ConeElementInterface): void;
+
+    /**
+     * Equivalent to `appendChild`, but adds this element to the top of the existing child list
+     * @see appendChild
+     * @param element
+     */
+    prepend(element: ConeElementInterface): void;
   }
 
   /**
@@ -161,6 +189,10 @@ export module Cone {
 
     appendChild(element: ConeElementInterface): void {
       this.children.push(element);
+    }
+
+    prepend(element: ConeElementInterface): void {
+      this.children.unshift(element);
     }
 
     get outerHTML(): string {
@@ -363,9 +395,10 @@ export module Cone {
      */
     get coneJumbotronH1(): ConeStyle {
       return {
-        "z-index": "1",
-        position: "absolute",
-        bottom: "54px",
+        // "z-index": "1",
+        // position: "absolute",
+        // bottom: "54px",
+        margin: "0px",
       };
     }
 
@@ -374,9 +407,24 @@ export module Cone {
      */
     get coneJumbotronP(): ConeStyle {
       return {
+        // "z-index": "1",
+        // position: "absolute",
+        // bottom: "38px",
+        margin: "0px",
+      };
+    }
+
+    /**
+     * .oogy-cone-alignable-box
+     */
+    get coneAlignableBox(): ConeStyle {
+      return {
         "z-index": "1",
         position: "absolute",
-        bottom: "38px",
+        width: "calc(100% - 140px)",
+        height: "calc(100% - 100px)",
+        display: "flex",
+        "flex-direction": "column",
       };
     }
   }
@@ -534,6 +582,61 @@ export module Cone {
           break;
       }
 
+      const alignableTypes = ["h1", "p"];
+      const contentItemElementAlignableBox = new ConeElement(); // holds alignable items
+      contentItemElementAlignableBox.classList = ["oogy-cone-alignable-box"];
+      contentItemElementAlignableBox.style = styleBuilder.coneAlignableBox;
+
+      // perform alignment if provided
+      const contentAlign = !content.align
+        ? kConeTemplateTabContentAlignmentDefault
+        : content.align;
+
+      let contentAlignParts = contentAlign.split("-");
+      if (!contentAlignParts || contentAlignParts.length < 2) {
+        contentAlignParts = kConeTemplateTabContentAlignmentDefault.split("-"); // safeguard
+      }
+
+      const verticalAlignStr =
+        contentAlignParts[0] as ConeTemplateTabContentAlignmentVertical;
+
+      const horizontalAlignStr =
+        contentAlignParts[1] as ConeTemplateTabContentAlignmentHorizontal;
+
+      // start with vertical
+      switch (verticalAlignStr) {
+        case ConeTemplateTabContentAlignmentVertical.top:
+          contentItemElementAlignableBox.style["justify-content"] =
+            "flex-start";
+          break;
+        case ConeTemplateTabContentAlignmentVertical.center:
+          contentItemElementAlignableBox.style["justify-content"] = "center";
+          break;
+        default:
+        case ConeTemplateTabContentAlignmentVertical.bottom:
+          contentItemElementAlignableBox.style["justify-content"] = "flex-end";
+          break;
+      }
+
+      // then horizontal
+      switch (horizontalAlignStr) {
+        default:
+        case ConeTemplateTabContentAlignmentHorizontal.left:
+          contentItemElementAlignableBox.style["text-align"] = "left";
+          contentItemElementAlignableBox.style["align-items"] = "flex-start";
+          break;
+        case ConeTemplateTabContentAlignmentHorizontal.center:
+          contentItemElementAlignableBox.style["text-align"] = "center";
+          contentItemElementAlignableBox.style["align-items"] = "center";
+          break;
+        case ConeTemplateTabContentAlignmentHorizontal.right:
+          contentItemElementAlignableBox.style["text-align"] = "right";
+          contentItemElementAlignableBox.style["align-items"] = "flex-end";
+          break;
+      }
+
+      contentElement.appendChild(contentItemElementAlignableBox);
+
       for (let contentItem of content.elements) {
         const contentItemElement = new ConeElement();
         contentItemElement.nodeType = contentItem.type;
@@ -560,7 +663,12 @@ export module Cone {
           contentItemElement.innerText = contentItem.text;
         }
 
-        contentElement.appendChild(contentItemElement);
+        // if alignable, add to box, otherwise, add directly
+        if (alignableTypes.includes(contentItem.type)) {
+          contentItemElementAlignableBox.appendChild(contentItemElement);
+        } else {
+          contentElement.prepend(contentItemElement); // insert before alignable box
+        }
       }
 
       return container;

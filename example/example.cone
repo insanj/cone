@@ -28,6 +28,7 @@
       "title": "🎥  Trailers",
       "content": {
         "style": "jumbotron",
+        "align": "bottom-center",
         "elements": [
           {
             "type": "img",
