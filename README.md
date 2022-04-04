@@ -8,6 +8,10 @@ Wraps all DOM/browser methods and classes so 🍦 cone generates to a string con
 
 Why? For fun! I thought a completely in-house static website generator would be a good thing to maintain using current ECMAScript standards for my current projects, as well as a demo of some of the techniques from [Oogy: Can You Help](https://oogycanyouhelp.com) itself.
 
+<p align="center">
+<img width="80%" src="screenshot.png" />
+</p>
+
 ## Install
 
 In Browser, download `dist/` and place the `Cone.js` somewhere in your website.
