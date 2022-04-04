@@ -1,7 +1,7 @@
 {
   "tabs": [
     {
-      "title": "🍦 cone example",
+      "title": "🐏 Home",
       "content": {
         "style": "jumbotron",
         "elements": [
@@ -16,6 +16,46 @@
           {
             "type": "p",
             "text": "Indie narrative deckbuilder."
+          }
+        ]
+      }
+    },
+    {
+      "title": "🎥 Trailers",
+      "content": {
+        "style": "jumbotron",
+        "elements": [
+          {
+            "type": "img",
+            "src": "/png/jumbotron.png"
+          },
+          {
+            "type": "h1",
+            "text": "Trailers"
+          },
+          {
+            "type": "p",
+            "text": "Learn more about Oogy: Can You Help"
+          }
+        ]
+      }
+    },
+    {
+      "title": "📬 Contact",
+      "content": {
+        "style": "jumbotron",
+        "elements": [
+          {
+            "type": "img",
+            "src": "/png/jumbotron.png"
+          },
+          {
+            "type": "h1",
+            "text": "Contact"
+          },
+          {
+            "type": "p",
+            "text": "Reach out about Oogy: Can You Help"
           }
         ]
       }

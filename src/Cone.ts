@@ -139,7 +139,15 @@ export module Cone {
 
     onclick: string = "";
 
-    style: Record<string, string> = {};
+    _style: Record<string, string> = {};
+
+    get style(): Record<string, string> {
+      return this._style;
+    }
+
+    set style(newValue: Record<string, string>) {
+      this._style = Object.assign({}, newValue); // prevent editing consts
+    }
 
     private attributes: Record<string, string> = {};
 
@@ -200,6 +208,138 @@ export module Cone {
   };
 
   /**
+   * Used to express that this type of data is standard key-value CSS
+   */
+  export type ConeStyle = Record<string, string>;
+
+  /**
+   * Represents the specific styles for supported elements, wrapped in an abstract class for ease of use
+   */
+  export abstract class ConeStyleDefault {
+    /**
+     * .oogy-cone
+     */
+    static cone: ConeStyle = {
+      "font-family": "system-ui",
+      position: "absolute",
+      top: "0px",
+      left: "0px",
+      width: "100%",
+      height: "100%",
+      display: "flex",
+      overflow: "hidden",
+    };
+
+    /**
+     * .oogy-cone-tab-content-container
+     */
+    static coneTabContentContainer: ConeStyle = {
+      position: "relative",
+      width: "100%",
+      height: "100%",
+      "overflow-y": "scroll",
+    };
+
+    /**
+     * .oogy-cone-tab-bar-container
+     */
+    static coneTabBarContainer: ConeStyle = {
+      position: "absolute",
+      bottom: "0px",
+      width: "100%",
+      padding: "8px 0px 12px 0px",
+      display: "flex",
+      "align-items": "center",
+      "justify-content": "center",
+    };
+
+    /**
+     * .oogy-cone-tab-content
+     */
+    static coneTabContent: ConeStyle = {
+      background: "#19132e",
+      color: "#2b154d",
+      position: "relative",
+      width: "100%",
+      "min-height": "calc(100% - 70px)",
+      "padding-bottom": "70px",
+      display: "flex",
+      "align-items": "center",
+      "justify-content": "center",
+    };
+
+    /**
+     * .oogy-cone-tab-bar
+     */
+    static coneTabBar: ConeStyle = {
+      background: "rgba(255, 255, 255, 0.9)",
+      "backdrop-filter": "blur(10px)",
+      color: "#2b154d",
+      "font-weight": "500",
+      padding: "10px",
+      "border-radius": "12px",
+      "box-shadow": "0px 1px 2px 1px rgba(0, 0, 0, 0.3)",
+      "z-index": "3",
+      display: "flex",
+      gap: "10px",
+      "user-select": "none",
+    };
+
+    /**
+     * .oogy-cone-tab
+     */
+    static coneTab: ConeStyle = {
+      padding: "5px 20px",
+      border: "2px solid #2b154d",
+      "border-radius": "10px",
+      cursor: "pointer",
+    };
+
+    /**
+     * .oogy-cone-jumbotron
+     */
+    static coneJumbotron: ConeStyle = {
+      position: "relative",
+      padding: "20px 0px",
+      width: "100%",
+      display: "flex",
+      "flex-direction": "column",
+      "align-items": "center",
+      "justify-content": "center",
+    };
+
+    /**
+     * .oogy-cone-jumbotron img
+     */
+    static coneJumbotronImg: ConeStyle = {
+      position: "relative",
+      width: "75%",
+      "max-width": "1080px",
+      height: "auto",
+      "border-radius": "12px",
+      "box-shadow": "0px 2px 10px 4px rgb(0 0 0 / 20%)",
+    };
+
+    /**
+     * .oogy-cone-jumbotron h1
+     */
+    static coneJumbotronH1: ConeStyle = {
+      "z-index": "1",
+      position: "absolute",
+      bottom: "54px",
+    };
+
+    /**
+     * .oogy-cone-jumbotron p
+     */
+    static coneJumbotronP: ConeStyle = {
+      "z-index": "1",
+      position: "absolute",
+      bottom: "38px",
+    };
+  }
+
+  /**
    * Represents the singleton/class version of the ConeBuilder, a great way to get started on generating an entire website in one go.
    */
   export interface ConeBuilderInterface {
@@ -235,27 +375,35 @@ export module Cone {
         "oogy-cone", // potential area for future schema exposure
       ];
 
+      container.style = ConeStyleDefault.cone;
+
       // build tab content container (where the main "body" shows)
       const tabContentContainerElement = new ConeElement();
       tabContentContainerElement.classList = [
         "oogy-cone-tab-content-container",
       ];
+      tabContentContainerElement.style =
+        ConeStyleDefault.coneTabContentContainer;
       container.appendChild(tabContentContainerElement);
 
       // build the tab bar, that shows at the bottom at toggles content elements
       const tabBarContainerElement = new ConeElement();
       tabBarContainerElement.classList = ["oogy-cone-tab-bar-container"];
+      tabBarContainerElement.style = ConeStyleDefault.coneTabBarContainer;
       container.appendChild(tabBarContainerElement);
 
       const tabBarElement = this.buildTabBar(template.tabs.length);
       tabBarElement.classList = ["oogy-cone-tab-bar"];
+      tabBarElement.style = ConeStyleDefault.coneTabBar;
       tabBarContainerElement.appendChild(tabBarElement);
 
       // - build tab bar items for each thing
       let i = 0;
       for (let tab of template.tabs) {
         const tabContentElement = this.buildTabContent(tab.content);
-        tabContentElement.id = `oogy-cone-tab-bar-content-${i}`;
+        tabContentElement.classList = ["oogy-cone-tab-content"];
+        tabContentElement.id = `oogy-cone-tab-content-${i}`;
+        tabContentElement.style = ConeStyleDefault.coneTabContent;
 
         if (i > 0) {
           tabContentElement.style.display = "none"; // autohide tab after the 1st one
@@ -265,8 +413,10 @@ export module Cone {
 
         const tabItemElement = this.buildTabItem(
           tab.title,
-          `for (let el of document.getElementsByClassName(${tabContentElement.classList[0]})) { el.style.display = 'none'; } document.getElementById(${tabContentElement.id}).style.display = 'block';`
+          `for (let el of document.getElementsByClassName('${tabContentElement.classList[0]}')) { el.style.display = 'none'; } document.getElementById('${tabContentElement.id}').style.display = 'flex';`
         );
+
+        tabItemElement.style = ConeStyleDefault.coneTab;
 
         tabBarElement.appendChild(tabItemElement);
 
@@ -306,6 +456,7 @@ export module Cone {
         default:
         case ConeTemplateTabContentStyle.jumbotron:
           contentElement.classList = ["oogy-cone-jumbotron"];
+          contentElement.style = ConeStyleDefault.coneJumbotron;
           break;
       }
 
@@ -321,6 +472,13 @@ export module Cone {
               break; // unexpected err case here, error understanding template
             }
             contentItemElement.setAttribute("src", contentItem.src!);
+            contentItemElement.style = ConeStyleDefault.coneJumbotronImg;
+            break;
+          case "h1":
+            contentItemElement.style = ConeStyleDefault.coneJumbotronH1;
+            break;
+          case "p":
+            contentItemElement.style = ConeStyleDefault.coneJumbotronP;
             break;
         }
 

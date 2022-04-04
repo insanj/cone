@@ -11,9 +11,15 @@ export var Cone;
             this.id = "";
             this.innerText = "";
             this.onclick = "";
-            this.style = {};
+            this._style = {};
             this.attributes = {};
             this.children = [];
+        }
+        get style() {
+            return this._style;
+        }
+        set style(newValue) {
+            this._style = Object.assign({}, newValue);
         }
         setAttribute(attribute, value) {
             this.attributes[attribute] = value;
@@ -44,6 +50,91 @@ export var Cone;
         }
     }
     Cone.ConeElement = ConeElement;
+    class ConeStyleDefault {
+    }
+    ConeStyleDefault.cone = {
+        "font-family": "system-ui",
+        position: "absolute",
+        top: "0px",
+        left: "0px",
+        width: "100%",
+        height: "100%",
+        display: "flex",
+        overflow: "hidden",
+    };
+    ConeStyleDefault.coneTabContentContainer = {
+        position: "relative",
+        width: "100%",
+        height: "100%",
+        "overflow-y": "scroll",
+    };
+    ConeStyleDefault.coneTabBarContainer = {
+        position: "absolute",
+        bottom: "0px",
+        width: "100%",
+        padding: "8px 0px 12px 0px",
+        display: "flex",
+        "align-items": "center",
+        "justify-content": "center",
+    };
+    ConeStyleDefault.coneTabContent = {
+        background: "#19132e",
+        color: "#2b154d",
+        position: "relative",
+        width: "100%",
+        "min-height": "calc(100% - 70px)",
+        "padding-bottom": "70px",
+        display: "flex",
+        "align-items": "center",
+        "justify-content": "center",
+    };
+    ConeStyleDefault.coneTabBar = {
+        background: "rgba(255, 255, 255, 0.9)",
+        "backdrop-filter": "blur(10px)",
+        color: "#2b154d",
+        "font-weight": "500",
+        padding: "10px",
+        "border-radius": "12px",
+        "box-shadow": "0px 1px 2px 1px rgba(0, 0, 0, 0.3)",
+        "z-index": "3",
+        display: "flex",
+        gap: "10px",
+        "user-select": "none",
+    };
+    ConeStyleDefault.coneTab = {
+        padding: "5px 20px",
+        border: "2px solid #2b154d",
+        "border-radius": "10px",
+        cursor: "pointer",
+    };
+    ConeStyleDefault.coneJumbotron = {
+        position: "relative",
+        padding: "20px 0px",
+        width: "100%",
+        display: "flex",
+        "flex-direction": "column",
+        "align-items": "center",
+        "justify-content": "center",
+    };
+    ConeStyleDefault.coneJumbotronImg = {
+        position: "relative",
+        width: "75%",
+        "max-width": "1080px",
+        height: "auto",
+        "border-radius": "12px",
+        "box-shadow": "0px 2px 10px 4px rgb(0 0 0 / 20%)",
+    };
+    ConeStyleDefault.coneJumbotronH1 = {
+        "z-index": "1",
+        position: "absolute",
+        bottom: "54px",
+    };
+    ConeStyleDefault.coneJumbotronP = {
+        "z-index": "1",
+        position: "absolute",
+        bottom: "38px",
+    };
+    Cone.ConeStyleDefault = ConeStyleDefault;
     class ConeBuilder {
         static build(options) {
             return new ConeBuilder().build(options);
@@ -62,26 +153,34 @@ export var Cone;
             container.classList = [
                 "oogy-cone",
             ];
+            container.style = ConeStyleDefault.cone;
             const tabContentContainerElement = new ConeElement();
             tabContentContainerElement.classList = [
                 "oogy-cone-tab-content-container",
             ];
+            tabContentContainerElement.style =
+                ConeStyleDefault.coneTabContentContainer;
             container.appendChild(tabContentContainerElement);
             const tabBarContainerElement = new ConeElement();
             tabBarContainerElement.classList = ["oogy-cone-tab-bar-container"];
+            tabBarContainerElement.style = ConeStyleDefault.coneTabBarContainer;
             container.appendChild(tabBarContainerElement);
             const tabBarElement = this.buildTabBar(template.tabs.length);
             tabBarElement.classList = ["oogy-cone-tab-bar"];
+            tabBarElement.style = ConeStyleDefault.coneTabBar;
             tabBarContainerElement.appendChild(tabBarElement);
             let i = 0;
             for (let tab of template.tabs) {
                 const tabContentElement = this.buildTabContent(tab.content);
-                tabContentElement.id = `oogy-cone-tab-bar-content-${i}`;
+                tabContentElement.classList = ["oogy-cone-tab-content"];
+                tabContentElement.id = `oogy-cone-tab-content-${i}`;
+                tabContentElement.style = ConeStyleDefault.coneTabContent;
                 if (i > 0) {
                     tabContentElement.style.display = "none";
                 }
                 tabContentContainerElement.appendChild(tabContentElement);
-                const tabItemElement = this.buildTabItem(tab.title, `for (let el of document.getElementsByClassName(${tabContentElement.classList[0]})) { el.style.display = 'none'; } document.getElementById(${tabContentElement.id}).style.display = 'block';`);
+                const tabItemElement = this.buildTabItem(tab.title, `for (let el of document.getElementsByClassName('${tabContentElement.classList[0]}')) { el.style.display = 'none'; } document.getElementById('${tabContentElement.id}').style.display = 'flex';`);
+                tabItemElement.style = ConeStyleDefault.coneTab;
                 tabBarElement.appendChild(tabItemElement);
                 i++;
             }
@@ -109,6 +208,7 @@ export var Cone;
                 default:
                 case ConeTemplateTabContentStyle.jumbotron:
                     contentElement.classList = ["oogy-cone-jumbotron"];
+                    contentElement.style = ConeStyleDefault.coneJumbotron;
                     break;
             }
             for (let contentItem of content.elements) {
@@ -122,6 +222,13 @@ export var Cone;
                             break;
                         }
                         contentItemElement.setAttribute("src", contentItem.src);
+                        contentItemElement.style = ConeStyleDefault.coneJumbotronImg;
+                        break;
+                    case "h1":
+                        contentItemElement.style = ConeStyleDefault.coneJumbotronH1;
+                        break;
+                    case "p":
+                        contentItemElement.style = ConeStyleDefault.coneJumbotronP;
                         break;
                 }
                 if (contentItem.text !== undefined) {
