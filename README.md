@@ -12,6 +12,8 @@ Why? For fun! I thought a completely in-house static website generator would be 
 <img width="80%" src="screenshot.png" />
 </p>
 
+[✨ Go to live example on Github Pages](https://insanj.github.io/cone/example.html)
+
 ## Install
 
 In Browser, download `dist/` and place the `Cone.min.js` (or `Cone.js`) somewhere in your website.
@@ -114,7 +116,7 @@ npm run example
   "tabs": [
     {
       /** title of this tab */
-      "title": "🍦 cone example",
+      "title": "🍦 Home",
 
       /** content/"body" of this tab */
       "content": {
@@ -126,7 +128,7 @@ npm run example
          * elements list (excludes large media, ex: img, video)
          * defaults to "bottom-left"
         */
-        "align": "bottom-center",
+        "align": "bottom-left",
 
         /** list of elements we want to show in this tab */
         "elements": [
@@ -148,6 +150,77 @@ npm run example
             /** finally, a p element which works as a subtitle in this case on the jumbotron style */
             "type": "p",
             "text": "Indie narrative deckbuilder."
+          }
+        ]
+      }
+    },
+    {
+      "title": "🎥  Trailer",
+
+      "content": {
+        "style": "jumbotron",
+        "elements": [
+          {
+            "type": "iframe",
+            "src": "https://www.youtube.com/embed/p8D-DACFWbk"
+          }
+        ]
+      }
+    },
+    {
+      "title": "🎮  Steam",
+      "content": {
+        "style": "jumbotron",
+        "elements": [
+          {
+            "type": "iframe",
+            "src": "https://store.steampowered.com/widget/1880310/"
+          },
+          {
+            "type": "h1",
+            "text": "The Studio Update - v1.4.0"
+          },
+          {
+            "type": "p",
+            "text": "Make your own custom cards, decks, and games in the most ambitious content update yet, now available on Steam for PC and Mac.\n\nUsing The Studio, anyone can create entirely unique cards and throw them into Custom Games. Custom Games have no restrictions, and allow you to turn your save into a playground for whatever type of fun is your favorite. Copy any normal game or make a new one from scratch to see how things would pan out if you chose differently. Edit, delete, and move cards in your Custom Deck anytime."
+          }
+        ]
+      }
+    },
+    {
+      "title": "☕️  More",
+      "content": {
+        "style": "list",
+        "elements": [
+          {
+            "type": "href",
+            "text": "Twitter",
+            "src": "https://twitter.com/OogyCanYouHelp"
+          },
+          {
+            "type": "href",
+            "text": "Instagram",
+            "src": "https://instagram.com/OogyCanYouHelp"
+          },
+          {
+            "type": "href",
+            "text": "Youtube",
+            "src": "https://youtube.com/insanj"
+          },
+          {
+            "type": "href",
+            "text": "Github",
+            "src": "https://github.com/insanj"
+          },
+          {
+            "type": "href",
+            "text": "Email",
+            "src": "mailto:contact@oogycanyouhelp.com"
+          },
+          {
+            "type": "href",
+            "text": "Press Kit",
+            "src": "https://drive.google.com/file/d/10YZxuofJn8aazM0_0sO1G-fEsCgP-BfQ/view?usp=sharing"
           }
         ]
       }

@@ -18,7 +18,7 @@ export declare module Cone {
         center = "center",
         right = "right"
     }
-    const kConeTemplateTabContentAlignmentDefault = "bottom-left";
+    const kConeTemplateTabContentAlignmentDefault: ConeTemplateTabContentAlignment;
     type ConeTemplateTabContent = {
         style: ConeTemplateTabContentStyle;
         elements: ConeTemplateTabContentElement[];
@@ -30,7 +30,8 @@ export declare module Cone {
         text?: string;
     };
     enum ConeTemplateTabContentStyle {
-        jumbotron = "jumbotron"
+        jumbotron = "jumbotron",
+        list = "list"
     }
     interface ConeElementInterface {
         nodeType: string;
@@ -75,6 +76,7 @@ export declare module Cone {
         get coneTabContent(): ConeStyle;
         get coneJumbotron(): ConeStyle;
         get coneJumbotronImg(): ConeStyle;
+        get coneJumbotronIFrame(): ConeStyle;
         get coneJumbotronH1(): ConeStyle;
         get coneJumbotronP(): ConeStyle;
         get coneAlignableBox(): ConeStyle;

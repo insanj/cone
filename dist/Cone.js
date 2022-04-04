@@ -16,6 +16,7 @@ export var Cone;
     let ConeTemplateTabContentStyle;
     (function (ConeTemplateTabContentStyle) {
         ConeTemplateTabContentStyle["jumbotron"] = "jumbotron";
+        ConeTemplateTabContentStyle["list"] = "list";
     })(ConeTemplateTabContentStyle = Cone.ConeTemplateTabContentStyle || (Cone.ConeTemplateTabContentStyle = {}));
     class ConeElement {
         constructor() {
@@ -171,6 +172,18 @@ export var Cone;
                 "box-shadow": "0px 2px 10px 4px rgb(0 0 0 / 20%)",
             };
         }
+        get coneJumbotronIFrame() {
+            return {
+                position: "relative",
+                width: "calc(100% - 40px)",
+                "max-width": "1080px",
+                "min-width": "720px",
+                height: "auto",
+                "aspect-ratio": "1920/1080",
+                "border-radius": "12px",
+                "box-shadow": "0px 2px 10px 4px rgb(0 0 0 / 20%)",
+            };
+        }
         get coneJumbotronH1() {
             return {
                 margin: "0px",
@@ -179,6 +192,7 @@ export var Cone;
         get coneJumbotronP() {
             return {
                 margin: "0px",
+                "white-space": "pre-line",
             };
         }
         get coneAlignableBox() {
@@ -351,6 +365,13 @@ export var Cone;
                         }
                         contentItemElement.setAttribute("src", contentItem.src);
                         contentItemElement.style = styleBuilder.coneJumbotronImg;
+                        break;
+                    case "iframe":
+                        if (contentItem.src === undefined) {
+                            break;
+                        }
+                        contentItemElement.setAttribute("src", contentItem.src);
+                        contentItemElement.style = styleBuilder.coneJumbotronIFrame;
                         break;
                     case "h1":
                         contentItemElement.style = styleBuilder.coneJumbotronH1;

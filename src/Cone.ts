@@ -6,7 +6,9 @@
  */
 export module Cone {
   /**
-   * Describes the complete 🍦 cone template, usually saved and expected in UTF-8 encoded JSON.
+   * Describes the complete 🍦 cone template, usually saved and expected in UTF-8 encoded JSON. Only two root keys are supported right now:
+   * 1. `tabs`, which matches `ConeTemplateTab`
+   * 2. `style`, optional, supports `background` and `color` keys (HTML color vals)
    */
   export type ConeTemplate = {
     tabs: ConeTemplateTab[];
@@ -15,7 +17,7 @@ export module Cone {
   };
 
   /**
-   * A single tab in the UI of the website
+   * Data format which represents a tab (what we use to go to different areas of the site, fixed to the bottom at the moment) and its content (the "body" of the site); each .cone will have an array of these that describe the entire website at the `tabs` key.
    */
   export type ConeTemplateTab = {
     /**
@@ -29,22 +31,40 @@ export module Cone {
     content: ConeTemplateTabContent;
   };
 
+  /**
+   * Expected type for the content alignment. Should be the vertical alignment followed by the horizontal alignment.
+   * @see kConeTemplateTabContentAlignmentDefault
+   * @example `bottom-left`, `top-right`, `center-center`
+   */
   export type ConeTemplateTabContentAlignment = string;
 
+  /**
+   * Vertical alignment of elements within the content body, usually for jumbotron. Only aligns alignable items, not the main media.
+   */
   export enum ConeTemplateTabContentAlignmentVertical {
     top = "top",
     center = "center",
     bottom = "bottom",
   }
 
+  /**
+   * Horizontal alignment of elements within the content body, usually for jumbotron. Only aligns alignable items, not the main media.
+   */
   export enum ConeTemplateTabContentAlignmentHorizontal {
     left = "left",
     center = "center",
     right = "right",
   }
 
-  export const kConeTemplateTabContentAlignmentDefault = "bottom-left";
+  /**
+   * Default alignment of content within a tab, usually for jumbotron style
+   */
+  export const kConeTemplateTabContentAlignmentDefault: ConeTemplateTabContentAlignment =
+    "bottom-left";
 
+  /**
+   * Data format which describes the primary content body that is shown when this area is active/selected
+   */
   export type ConeTemplateTabContent = {
     /**
      * Tabs can have different layouts, this defines what we will expect to see in this tab's content.
@@ -63,6 +83,9 @@ export module Cone {
     align?: ConeTemplateTabContentAlignment;
   };
 
+  /**
+   * Data format which describes an element within a tab's content body, usually these are turned into stripped-down HTML elements, sometimes with the same nodeType/tag, using ConeElement.
+   */
   export type ConeTemplateTabContentElement = {
     /**
      * Represents the supports HTML node/tag type.
@@ -81,11 +104,19 @@ export module Cone {
     text?: string;
   };
 
+  /**
+   * Supported content styles. Found within the .cone format, used for each tab's `content` to determine the layout of the content body.
+   */
   export enum ConeTemplateTabContentStyle {
     /**
-     * A minimal style which emphasizes `img` elements and overlays `h1` and `p` to the `img` which preceeds it
+     * A minimal style which emphasizes `img` or `iframe` elements and overlays `h1` and `p` to the `img` which preceeds it. Enforces a 1920/1080 aspect ratio.
      */
     jumbotron = "jumbotron",
+
+    /**
+     * A list style which wraps every element in a list item element and presents the content in individual "banners" (simiular to `ul` containing `li`, even though we use flex for most layouts)
+     */
+    list = "list",
   }
 
   /**
@@ -391,6 +422,22 @@ export module Cone {
     }
 
     /**
+     * .oogy-cone-jumbotron iframe
+     */
+    get coneJumbotronIFrame(): ConeStyle {
+      return {
+        position: "relative",
+        width: "calc(100% - 40px)",
+        "max-width": "1080px",
+        "min-width": "720px",
+        height: "auto",
+        "aspect-ratio": "1920/1080",
+        "border-radius": "12px",
+        "box-shadow": "0px 2px 10px 4px rgb(0 0 0 / 20%)",
+      };
+    }
+
+    /**
      * .oogy-cone-jumbotron h1
      */
     get coneJumbotronH1(): ConeStyle {
@@ -411,6 +458,7 @@ export module Cone {
         // position: "absolute",
         // bottom: "38px",
         margin: "0px",
+        "white-space": "pre-line",
       };
     }
 
@@ -654,6 +702,13 @@ export module Cone {
             }
             contentItemElement.setAttribute("src", contentItem.src!);
             contentItemElement.style = styleBuilder.coneJumbotronImg;
+            break;
+          case "iframe":
+            if (contentItem.src === undefined) {
+              break; // unexpected err case here, error understanding template
+            }
+            contentItemElement.setAttribute("src", contentItem.src!);
+            contentItemElement.style = styleBuilder.coneJumbotronIFrame;
             break;
           case "h1":
             contentItemElement.style = styleBuilder.coneJumbotronH1;
