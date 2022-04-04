@@ -1,10 +1,10 @@
 # cone
 
-🍦 vanilla js static pwa generator, built in ts for [Oogy: Can You Help](https://oogycanyouhelp.com) (~10kB)
+🍦 vanilla js static pwa generator, built in ts for [Oogy: Can You Help](https://oogycanyouhelp.com) (~11kB)
 
-Does not require any dependencies (uses Typescript interally to generate `Cone.js`).
+Does not require any dependencies. Treats Browser and Node.js equally. Uses Typescript interally to generate `Cone.js` for either [npm](https://www.npmjs.com/) or inline usage.
 
-Wraps all DOM/browser methods and classes so 🍦 cone generates to a string consistently in every environment.
+Wraps all Browser (DOM) methods and classes so 🍦 cone generates to a string consistently in every environment. No need for `window`, `document`, `Element`, or `jquery`.
 
 Why? For fun! I thought a completely in-house static website generator would be a good thing to maintain using current ECMAScript standards for my current projects, as well as a demo of some of the techniques from [Oogy: Can You Help](https://oogycanyouhelp.com) itself.
 
@@ -14,7 +14,7 @@ Why? For fun! I thought a completely in-house static website generator would be 
 
 ## Install
 
-In Browser, download `dist/` and place the `Cone.js` or `Cone.min.js` somewhere in your website.
+In Browser, download `dist/` and place the `Cone.min.js` (or `Cone.js`) somewhere in your website.
 
 ```html
 <script src="Cone.min.js"></script>
@@ -29,10 +29,11 @@ npm install oogy-cone
 Then in any environment:
 
 ```ts
-import { Cone } from "Cone.js"; // or 'oogy-cone'
+import { Cone } from "Cone.js";
+// or 'oogy-cone', 'Cone.min.js', 'Cone' depending on your context
 
 const template = {
-  // 🍦 .cone template
+  // 🍦 .cone template, either in utf-8 string or JSON
 };
 
 // -> or alternatively, in NodeJS contexts:
