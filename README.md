@@ -2,17 +2,17 @@
 
 🍦 vanilla js static pwa generator, built in ts for [Oogy: Can You Help](https://oogycanyouhelp.com) (~11kB)
 
+[✨ Go to live example on Github Pages](https://insanj.github.io/cone/example.html)
+
+<p align="center">
+<img width="80%" src="cone_example_apr_4.gif" />
+</p>
+
 Does not require any dependencies. Treats Browser and Node.js equally. Uses Typescript interally to generate `Cone.js` for either [npm](https://www.npmjs.com/) or inline usage.
 
 Wraps all Browser (DOM) methods and classes so 🍦 cone generates to a string consistently in every environment. No need for `window`, `document`, `Element`, or `jquery`.
 
 Why? For fun! I thought a completely in-house static website generator would be a good thing to maintain using current ECMAScript standards for my current projects, as well as a demo of some of the techniques from [Oogy: Can You Help](https://oogycanyouhelp.com) itself.
-
-<p align="center">
-<img width="80%" src="screenshot.png" />
-</p>
-
-[✨ Go to live example on Github Pages](https://insanj.github.io/cone/example.html)
 
 ## Install
 
