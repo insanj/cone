@@ -453,7 +453,7 @@ export module Cone {
         height: "auto",
         "border-radius": "12px",
         "box-shadow": "0px 2px 10px 4px rgb(0 0 0 / 20%)",
-        animation: "carousel 1.5s ease-out",
+        // animation: "carousel 1.5s ease-out",
       };
     }
 
@@ -915,18 +915,20 @@ export module Cone {
                   const nextIdx = showingIdx + 1 > children.length - 1 ? 0 : showingIdx + 1;
                   const currEl = children[showingIdx], nextEl = children[nextIdx];
 
-                  currEl.style.animation = 'carouselOut 0.5s ease-out';
+                  currEl.style.animation = 'carouselOut 0.5s ease-out forwards';
 
                   setTimeout(() => {
                     window.requestAnimationFrame(() => {
                       currEl.style.display = 'none';
+                      nextEl.style.animation = 'carousel 1.5s ease-out forwards';
                       nextEl.style.display = '';
-                      currEl.style.animation = 'carousel 1.5s ease-out';
                     });
                   }, 500);
                 };
 
-                setInterval(() => { window.requestAnimationFrame(cone_oncarousel) }, ${carouselDuration});
+                setInterval(() => { window.requestAnimationFrame(cone_oncarousel) }, ${
+                  carouselDuration + 500
+                });
               `
                 .trim()
                 .replace(/\n\s+/g, "");
