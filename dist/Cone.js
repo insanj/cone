@@ -342,7 +342,11 @@ export var Cone;
             const result = container.outerHTML;
             const animationKeyframesHTML = `<style class='oogy-cone-animations'>@keyframes fadeOut { 100% { opacity: 0.2; transform: scale(0.8, 0.8) translate(0, calc(100% + 80px));} } @keyframes fadeIn { 0% { opacity: 0.2; transform: scale(0.8, 0.8) translate(0, calc(100% + 80px)); background: transparent; border-radius: 0px; box-shadow: none; } }</style>`;
             const scaleJS = `
-      <script>
+      <img 
+        src='data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=' 
+        style='display: none;' 
+        onload="
+
         window.addEventListener('resize', (e) => { 
           const el = document.getElementById('oogy-cone');
           if (window.innerWidth > 800) { 
@@ -361,7 +365,7 @@ export var Cone;
             el.style.transform = 'translate(-50%, -50%) ' + 'scale(' + scale + ')';
           }
         });
-      </script>`
+      " />`
                 .trim()
                 .replace(/\n\s+/g, "");
             const styleAndResult = `${animationKeyframesHTML}${result}${scaleJS}`;
