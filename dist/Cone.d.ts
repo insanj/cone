@@ -6,6 +6,7 @@ export declare module Cone {
     };
     type ConeTemplateTab = {
         title: string;
+        expanded: string;
         content: ConeTemplateTabContent;
     };
     type ConeTemplateTabContentAlignment = string;

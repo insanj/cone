@@ -24,9 +24,14 @@ export module Cone {
    */
   export type ConeTemplateTab = {
     /**
-     * Title, required as this is also what we tap to swap to a new tab
+     * Smallest possible title/icon, required as this is also what we tap to swap to a new tab
      */
     title: string;
+
+    /**
+     * Expanded text/title, visible on larger displays
+     */
+    expanded: string;
 
     /**
      * @see ConeTemplateTabContent
@@ -378,6 +383,7 @@ export module Cone {
         width: "100%",
         height: "100%",
         "overflow-y": "scroll",
+        "transform-origin": "center center", // used for scaling
         background: this.reference.background,
       };
     }
@@ -608,6 +614,7 @@ export module Cone {
 
       // build tab content container (where the main "body" shows)
       const tabContentContainerElement = new ConeElement();
+      tabContentContainerElement.id = "oogy-cone-tab-content-container";
       tabContentContainerElement.classList = [
         "oogy-cone-tab-content-container",
       ];
@@ -639,7 +646,7 @@ export module Cone {
         tabContentElement.style = styleBuilder.coneTabContent;
         tabContentContainerElement.appendChild(tabContentElement);
 
-        const tabItemElement = this.buildTabItem(tab.title);
+        const tabItemElement = this.buildTabItem(tab.title, tab.expanded);
 
         tabItemElement.onclick = `
         for (let el of document.getElementsByClassName('${tabItemElement.classList[0]}')) {
@@ -688,23 +695,42 @@ export module Cone {
         style='display: none;' 
         onload="
 
-        window.addEventListener('resize', (e) => { 
-          const el = document.getElementById('oogy-cone');
-          if (window.innerWidth > 800) { 
+        var cone_onResize = () => {
+          const el = document.getElementById('oogy-cone-tab-content-container');
+          const tabs = document.getElementsByClassName('oogy-cone-tab-expanded-text');
+
+          if (window.innerWidth > 800) {
+            if (el.style.position === 'relative') { return; }
+            
+            el.style.position = 'relative';
             el.style.width = '100%';
             el.style.height = '100%';
-            el.style.left = '0px';
-            el.style.top = '0px';
+            el.style.left = 'auto';
+            el.style.top = 'auto';
             el.style.transform = 'none';
+
+            for (let tab of tabs) { 
+              tab.style.display = '';
+            }
           }
           else {
             const scale = Math.min(window.innerWidth/800, window.innerHeight/800);
+            el.style.position = 'absolute';
             el.style.width = '800px';
             el.style.height = '800px';
             el.style.left = '50%';
             el.style.top = '50%';
             el.style.transform = 'translate(-50%, -50%) ' + 'scale(' + scale + ')';
+
+            for (let tab of tabs) { 
+              tab.style.display = 'none';
+            }
           }
+        };
+
+        cone_onResize();
+        window.addEventListener('resize', (e) => { 
+          cone_onResize();
         });
       " />`
         .trim()
@@ -720,10 +746,20 @@ export module Cone {
       return element;
     }
 
-    private buildTabItem(title: string): ConeElementInterface {
+    private buildTabItem(
+      title: string,
+      expanded: string
+    ): ConeElementInterface {
       const element = new ConeElement();
       element.classList = ["oogy-cone-tab"];
       element.innerText = title;
+
+      const expandedElement = new ConeElement();
+      expandedElement.nodeType = "span";
+      expandedElement.classList = ["oogy-cone-tab-expanded-text"];
+      expandedElement.innerText = `  ${expanded}`; // auto add 2 spaces (lol)
+      element.appendChild(expandedElement);
+
       return element;
     }
 

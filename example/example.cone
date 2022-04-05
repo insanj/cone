@@ -6,7 +6,8 @@
   "start": 3,
   "tabs": [
     {
-      "title": "🐏  Home",
+      "title": "🐏",
+      "expanded": "Home",
       "content": {
         "style": "jumbotron",
         "elements": [
@@ -26,7 +27,8 @@
       }
     },
     {
-      "title": "🎥  Trailer",
+      "title": "🎥",
+      "expanded": "Trailer",
       "content": {
         "style": "jumbotron",
         "align": "bottom-center",
@@ -39,7 +41,8 @@
       }
     },
     {
-      "title": "🎮  Steam",
+      "title": "🎮",
+      "expanded": "Steam",
       "content": {
         "style": "jumbotron",
         "elements": [
@@ -59,7 +62,8 @@
       }
     },
     {
-      "title": "☕️  More",
+      "title": "☕️",
+      "expanded": "More",
       "content": {
         "style": "list",
         "align": "center-center",

@@ -112,11 +112,20 @@ npm run example
     "color": "#fff"
   },
 
+  /**
+   * optional:
+   * index (starting at 0) to automatically select when launching website (defaults to 0)
+  */
+  "start": 0,
+
   /** content tabs */
   "tabs": [
     {
-      /** title of this tab */
-      "title": "🍦 Home",
+      /** shortest possible title of this tab, used on < 800px wide displays */
+      "title": "🍦"
+
+      /** expanded title to use on desktop displays */
+      "expanded": "Home",
 
       /** content/"body" of this tab */
       "content": {

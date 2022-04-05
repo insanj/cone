@@ -135,6 +135,7 @@ export var Cone;
                 width: "100%",
                 height: "100%",
                 "overflow-y": "scroll",
+                "transform-origin": "center center",
                 background: this.reference.background,
             };
         }
@@ -288,6 +289,7 @@ export var Cone;
             ];
             container.style = styleBuilder.cone;
             const tabContentContainerElement = new ConeElement();
+            tabContentContainerElement.id = "oogy-cone-tab-content-container";
             tabContentContainerElement.classList = [
                 "oogy-cone-tab-content-container",
             ];
@@ -309,7 +311,7 @@ export var Cone;
                 tabContentElement.id = `oogy-cone-tab-content-${i}`;
                 tabContentElement.style = styleBuilder.coneTabContent;
                 tabContentContainerElement.appendChild(tabContentElement);
-                const tabItemElement = this.buildTabItem(tab.title);
+                const tabItemElement = this.buildTabItem(tab.title, tab.expanded);
                 tabItemElement.onclick = `
         for (let el of document.getElementsByClassName('${tabItemElement.classList[0]}')) {
           el.style['background-color'] = '${styleBuilder.reference.background}';
@@ -347,23 +349,42 @@ export var Cone;
         style='display: none;' 
         onload="
 
-        window.addEventListener('resize', (e) => { 
-          const el = document.getElementById('oogy-cone');
-          if (window.innerWidth > 800) { 
+        var cone_onResize = () => {
+          const el = document.getElementById('oogy-cone-tab-content-container');
+          const tabs = document.getElementsByClassName('oogy-cone-tab-expanded-text');
+
+          if (window.innerWidth > 800) {
+            if (el.style.position === 'relative') { return; }
+            
+            el.style.position = 'relative';
             el.style.width = '100%';
             el.style.height = '100%';
-            el.style.left = '0px';
-            el.style.top = '0px';
+            el.style.left = 'auto';
+            el.style.top = 'auto';
             el.style.transform = 'none';
+
+            for (let tab of tabs) { 
+              tab.style.display = '';
+            }
           }
           else {
             const scale = Math.min(window.innerWidth/800, window.innerHeight/800);
+            el.style.position = 'absolute';
             el.style.width = '800px';
             el.style.height = '800px';
             el.style.left = '50%';
             el.style.top = '50%';
             el.style.transform = 'translate(-50%, -50%) ' + 'scale(' + scale + ')';
+
+            for (let tab of tabs) { 
+              tab.style.display = 'none';
+            }
           }
+        };
+
+        cone_onResize();
+        window.addEventListener('resize', (e) => { 
+          cone_onResize();
         });
       " />`
                 .trim()
@@ -376,10 +397,15 @@ export var Cone;
             element.classList = ["oogy-cone-tab-bar"];
             return element;
         }
-        buildTabItem(title) {
+        buildTabItem(title, expanded) {
             const element = new ConeElement();
             element.classList = ["oogy-cone-tab"];
             element.innerText = title;
+            const expandedElement = new ConeElement();
+            expandedElement.nodeType = "span";
+            expandedElement.classList = ["oogy-cone-tab-expanded-text"];
+            expandedElement.innerText = `  ${expanded}`;
+            element.appendChild(expandedElement);
             return element;
         }
         buildTabContent(styleBuilder, content) {
