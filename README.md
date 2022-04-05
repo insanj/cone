@@ -1,6 +1,6 @@
 # cone
 
-🍦 vanilla js static pwa generator, built in ts for [Oogy: Can You Help](https://oogycanyouhelp.com) (~11kB)
+🍦 vanilla js static pwa generator, built in ts for [Oogy: Can You Help](https://oogycanyouhelp.com) (~14kB)
 
 [✨ Go to live example on Github Pages](https://insanj.github.io/cone/example.html)
 

@@ -312,6 +312,7 @@ export module Cone {
         height: "100%",
         display: "flex",
         overflow: "hidden",
+        "transform-origin": "center center", // used when scaling in small windows
       };
     }
 
@@ -484,6 +485,7 @@ export module Cone {
         height: "calc(100% - 100px)",
         display: "flex",
         "flex-direction": "column",
+        "min-width": "620px",
       };
     }
 
@@ -597,6 +599,7 @@ export module Cone {
       }
 
       const container = new ConeElement();
+      container.id = "oogy-cone";
       container.classList = [
         "oogy-cone", // potential area for future schema exposure
       ];
@@ -679,7 +682,31 @@ export module Cone {
       const result = container.outerHTML;
       const animationKeyframesHTML = `<style class='oogy-cone-animations'>@keyframes fadeOut { 100% { opacity: 0.2; transform: scale(0.8, 0.8) translate(0, calc(100% + 80px));} } @keyframes fadeIn { 0% { opacity: 0.2; transform: scale(0.8, 0.8) translate(0, calc(100% + 80px)); background: transparent; border-radius: 0px; box-shadow: none; } }</style>`;
 
-      const styleAndResult = `${animationKeyframesHTML}${result}`;
+      const scaleJS = `
+      <script>
+        window.addEventListener('resize', (e) => { 
+          const el = document.getElementById('oogy-cone');
+          if (window.innerWidth > 800) { 
+            el.style.width = '100%';
+            el.style.height = '100%';
+            el.style.left = '0px';
+            el.style.top = '0px';
+            el.style.transform = 'none';
+          }
+          else {
+            const scale = Math.min(window.innerWidth/800, window.innerHeight/800);
+            el.style.width = '800px';
+            el.style.height = '800px';
+            el.style.left = '50%';
+            el.style.top = '50%';
+            el.style.transform = 'translate(-50%, -50%) ' + 'scale(' + scale + ')';
+          }
+        });
+      </script>`
+        .trim()
+        .replace(/\n\s+/g, "");
+
+      const styleAndResult = `${animationKeyframesHTML}${result}${scaleJS}`;
       return styleAndResult;
     }
 
