@@ -70,6 +70,8 @@ export module Cone {
   export const kConeTemplateTabContentAlignmentDefault: ConeTemplateTabContentAlignment =
     "bottom-left";
 
+  export const kConeTemplateTabContentDurationDefault: number = 3200;
+
   /**
    * Data format which describes the primary content body that is shown when this area is active/selected
    */
@@ -77,7 +79,12 @@ export module Cone {
     /**
      * Tabs can have different layouts, this defines what we will expect to see in this tab's content.
      */
-    style: ConeTemplateTabContentStyle;
+    kind: ConeTemplateTabContentKind;
+
+    /**
+     * Milliseconds. Animation duration. If more than 1 media element is given and an animation is scheduled, this will be used for its duration instead of the default.
+     */
+    duration?: number;
 
     /**
      * Elements which will be encoded using the middleman of ConeElement
@@ -118,9 +125,9 @@ export module Cone {
   };
 
   /**
-   * Supported content styles. Found within the .cone format, used for each tab's `content` to determine the layout of the content body.
+   * Supported content kinds. Found within the .cone format, used for each tab's `content` to determine the layout of the content body.
    */
-  export enum ConeTemplateTabContentStyle {
+  export enum ConeTemplateTabContentKind {
     /**
      * A minimal style which emphasizes `img` or `iframe` elements and overlays `h1` and `p` to the `img` which preceeds it. Enforces a 1920/1080 aspect ratio.
      */
@@ -167,11 +174,16 @@ export module Cone {
     outerHTML: string;
 
     /**
-     * JS onclick handler, only accepted as string
+     * JS onclick handler, only accepted as string. Used primarily to swap content when clicking a tab.
      * @example
      *
      */
     onclick: string;
+
+    /**
+     * JS onload handler, only accepted as string. Used primarily when loading images to set up a carousel if more than 1 image is supplied.
+     */
+    onload: string;
 
     /**
      * HTML short-hand for inline `style` attribute. If provided, this will be used AFTER the attribute.
@@ -212,6 +224,8 @@ export module Cone {
     innerText: string = "";
 
     onclick: string = "";
+
+    onload: string = "";
 
     _style: Record<string, string> = {};
 
@@ -268,7 +282,10 @@ export module Cone {
       const onclickStr =
         this.onclick.length < 1 ? "" : ` onclick="${this.onclick}" `;
 
-      const encoded = `<${tagName}${idStr}${classStr}${attributesStr}${styleStr}${onclickStr}>${this.innerText}${childrenStr}</${tagName}>`;
+      const onloadStr =
+        this.onload.length < 1 ? "" : ` onload="${this.onload}" `;
+
+      const encoded = `<${tagName}${idStr}${classStr}${attributesStr}${styleStr}${onclickStr}${onloadStr}>${this.innerText}${childrenStr}</${tagName}>`;
 
       return encoded;
     }
@@ -436,6 +453,7 @@ export module Cone {
         height: "auto",
         "border-radius": "12px",
         "box-shadow": "0px 2px 10px 4px rgb(0 0 0 / 20%)",
+        animation: "carousel 1.5s ease-out",
       };
     }
 
@@ -492,6 +510,7 @@ export module Cone {
         display: "flex",
         "flex-direction": "column",
         "min-width": "620px",
+        "text-shadow": "-1px 2px 3px rgba(0,0,0,0.2)",
       };
     }
 
@@ -687,7 +706,7 @@ export module Cone {
       // generate final string from the resulting element, which until now
       // was very close if not identical to the in-DOM result (document.createElement)
       const result = container.outerHTML;
-      const animationKeyframesHTML = `<style class='oogy-cone-animations'>@keyframes fadeOut { 100% { opacity: 0.2; transform: scale(0.8, 0.8) translate(0, calc(100% + 80px));} } @keyframes fadeIn { 0% { opacity: 0.2; transform: scale(0.8, 0.8) translate(0, calc(100% + 80px)); background: transparent; border-radius: 0px; box-shadow: none; } }</style>`;
+      const animationKeyframesHTML = `<style class='oogy-cone-animations'>@keyframes fadeOut { 100% { opacity: 0.2; transform: scale(0.8, 0.8) translate(0, calc(100% + 80px));} } @keyframes fadeIn { 0% { opacity: 0.2; transform: scale(0.8, 0.8) translate(0, calc(100% + 80px)); background: transparent; border-radius: 0px; box-shadow: none; } } @keyframes carousel { 0% { filter: blur(2px) saturate(0%); opacity: 0; } }@keyframes carouselOut { 100% { opacity: 0; filter: saturate(0%); } }</style>`;
 
       const scaleJS = `
       <img 
@@ -736,7 +755,23 @@ export module Cone {
         .trim()
         .replace(/\n\s+/g, "");
 
-      const styleAndResult = `${animationKeyframesHTML}${result}${scaleJS}`;
+      let preloadLinkHTML = "";
+      let imgSrcsToPreload = []; // insert <link> preload for all images if exists
+      for (let tab of template.tabs) {
+        for (let el of tab.content.elements) {
+          if (el.type === "img" && el.src) {
+            imgSrcsToPreload.push(el.src);
+          }
+        }
+      }
+
+      if (imgSrcsToPreload.length > 0) {
+        preloadLinkHTML = imgSrcsToPreload
+          .map((src) => `<link rel='preload' as='image' href='${src}' />`)
+          .join("");
+      }
+
+      const styleAndResult = `${preloadLinkHTML}${animationKeyframesHTML}${result}${scaleJS}`;
       return styleAndResult;
     }
 
@@ -778,14 +813,14 @@ export module Cone {
       contentItemElementAlignableBox.classList = ["oogy-cone-alignable-box"];
       contentItemElementAlignableBox.style = styleBuilder.coneAlignableBox;
 
-      switch (content.style) {
+      switch (content.kind) {
         default:
-        case ConeTemplateTabContentStyle.jumbotron:
+        case ConeTemplateTabContentKind.jumbotron:
           contentElement.classList = ["oogy-cone-jumbotron"];
           contentElement.style = styleBuilder.coneJumbotron;
           contentItemElementAlignableBox.style["position"] = "absolute";
           break;
-        case ConeTemplateTabContentStyle.list:
+        case ConeTemplateTabContentKind.list:
           contentElement.classList = ["oogy-cone-list"];
           contentElement.style = styleBuilder.coneList;
           break;
@@ -841,6 +876,7 @@ export module Cone {
 
       contentElement.appendChild(contentItemElementAlignableBox);
 
+      let imgIdx = 0;
       for (let contentItem of content.elements) {
         const contentItemElement = new ConeElement();
         contentItemElement.nodeType = contentItem.type;
@@ -854,6 +890,46 @@ export module Cone {
             }
             contentItemElement.setAttribute("src", contentItem.src!);
             contentItemElement.style = styleBuilder.coneJumbotronImg;
+            contentItemElement.id = `oogy-cone-img-${imgIdx}`;
+
+            if (imgIdx > 0) {
+              // hide and use subsequent img (think jumbotron) elements as carousel/fading 1 at a time
+              contentItemElement.style["display"] = "none";
+            } else {
+              const carouselDuration =
+                content.duration !== undefined
+                  ? content.duration
+                  : kConeTemplateTabContentDurationDefault;
+
+              // set onload script to carousel using parentNode and id
+              contentItemElement.onload = `
+                const parentNode = this.parentNode;
+                if (!parentNode && !parentNode.childNodes) { return; }
+
+                const children = Array.from(parentNode.childNodes).filter(n => n.nodeName === 'IMG');
+                if (children.length < 2) { return; }
+
+                var cone_oncarousel = () => {
+                  const showingIdx = children.findIndex(c => c.style.display !== 'none');
+                  const nextIdx = showingIdx + 1 > children.length - 1 ? 0 : showingIdx + 1;
+                  const currEl = children[showingIdx], nextEl = children[nextIdx];
+
+                  currEl.style.animation = 'carouselOut 0.5s ease-out';
+
+                  setTimeout(() => { 
+                    currEl.style.display = 'none';
+                    nextEl.style.display = '';
+                    currEl.style.animation = 'carousel 1.5s ease-out';
+                  }, 500);
+                };
+
+                setInterval(cone_oncarousel, ${carouselDuration});
+              `
+                .trim()
+                .replace(/\n\s+/g, "");
+            }
+
+            imgIdx++;
             break;
           case "iframe":
             if (contentItem.src === undefined) {
@@ -884,7 +960,7 @@ export module Cone {
         let elementToUse = contentItemElement;
 
         // - if list style, we want to wrap whatever this is in the item class/element
-        if (content.style === ConeTemplateTabContentStyle.list) {
+        if (content.kind === ConeTemplateTabContentKind.list) {
           elementToUse = new ConeElement();
           elementToUse.classList = ["oogy-cone-list-item"];
           elementToUse.style = styleBuilder.coneListItem;

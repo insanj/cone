@@ -21,8 +21,10 @@ export declare module Cone {
         right = "right"
     }
     const kConeTemplateTabContentAlignmentDefault: ConeTemplateTabContentAlignment;
+    const kConeTemplateTabContentDurationDefault: number;
     type ConeTemplateTabContent = {
-        style: ConeTemplateTabContentStyle;
+        kind: ConeTemplateTabContentKind;
+        duration?: number;
         elements: ConeTemplateTabContentElement[];
         align?: ConeTemplateTabContentAlignment;
     };
@@ -32,7 +34,7 @@ export declare module Cone {
         text?: string;
         href?: string;
     };
-    enum ConeTemplateTabContentStyle {
+    enum ConeTemplateTabContentKind {
         jumbotron = "jumbotron",
         list = "list"
     }
@@ -43,6 +45,7 @@ export declare module Cone {
         innerText: string;
         outerHTML: string;
         onclick: string;
+        onload: string;
         style: Record<string, string>;
         setAttribute(attribute: string, value: string): void;
         appendChild(element: ConeElementInterface): void;
@@ -54,6 +57,7 @@ export declare module Cone {
         id: string;
         innerText: string;
         onclick: string;
+        onload: string;
         _style: Record<string, string>;
         get style(): Record<string, string>;
         set style(newValue: Record<string, string>);

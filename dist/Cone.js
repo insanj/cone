@@ -13,11 +13,12 @@ export var Cone;
         ConeTemplateTabContentAlignmentHorizontal["right"] = "right";
     })(ConeTemplateTabContentAlignmentHorizontal = Cone.ConeTemplateTabContentAlignmentHorizontal || (Cone.ConeTemplateTabContentAlignmentHorizontal = {}));
     Cone.kConeTemplateTabContentAlignmentDefault = "bottom-left";
-    let ConeTemplateTabContentStyle;
-    (function (ConeTemplateTabContentStyle) {
-        ConeTemplateTabContentStyle["jumbotron"] = "jumbotron";
-        ConeTemplateTabContentStyle["list"] = "list";
-    })(ConeTemplateTabContentStyle = Cone.ConeTemplateTabContentStyle || (Cone.ConeTemplateTabContentStyle = {}));
+    Cone.kConeTemplateTabContentDurationDefault = 3200;
+    let ConeTemplateTabContentKind;
+    (function (ConeTemplateTabContentKind) {
+        ConeTemplateTabContentKind["jumbotron"] = "jumbotron";
+        ConeTemplateTabContentKind["list"] = "list";
+    })(ConeTemplateTabContentKind = Cone.ConeTemplateTabContentKind || (Cone.ConeTemplateTabContentKind = {}));
     class ConeElement {
         constructor() {
             this.nodeType = "div";
@@ -25,6 +26,7 @@ export var Cone;
             this.id = "";
             this.innerText = "";
             this.onclick = "";
+            this.onload = "";
             this._style = {};
             this.attributes = {};
             this.children = [];
@@ -62,7 +64,8 @@ export var Cone;
                     .map((key) => `${key}:${this.style[key]};`)
                     .join("")}" `;
             const onclickStr = this.onclick.length < 1 ? "" : ` onclick="${this.onclick}" `;
-            const encoded = `<${tagName}${idStr}${classStr}${attributesStr}${styleStr}${onclickStr}>${this.innerText}${childrenStr}</${tagName}>`;
+            const onloadStr = this.onload.length < 1 ? "" : ` onload="${this.onload}" `;
+            const encoded = `<${tagName}${idStr}${classStr}${attributesStr}${styleStr}${onclickStr}${onloadStr}>${this.innerText}${childrenStr}</${tagName}>`;
             return encoded;
         }
     }
@@ -175,6 +178,7 @@ export var Cone;
                 height: "auto",
                 "border-radius": "12px",
                 "box-shadow": "0px 2px 10px 4px rgb(0 0 0 / 20%)",
+                animation: "carousel 1.5s ease-out",
             };
         }
         get coneJumbotronIFrame() {
@@ -209,6 +213,7 @@ export var Cone;
                 display: "flex",
                 "flex-direction": "column",
                 "min-width": "620px",
+                "text-shadow": "-1px 2px 3px rgba(0,0,0,0.2)",
             };
         }
         get coneList() {
@@ -342,7 +347,7 @@ export var Cone;
                 i++;
             }
             const result = container.outerHTML;
-            const animationKeyframesHTML = `<style class='oogy-cone-animations'>@keyframes fadeOut { 100% { opacity: 0.2; transform: scale(0.8, 0.8) translate(0, calc(100% + 80px));} } @keyframes fadeIn { 0% { opacity: 0.2; transform: scale(0.8, 0.8) translate(0, calc(100% + 80px)); background: transparent; border-radius: 0px; box-shadow: none; } }</style>`;
+            const animationKeyframesHTML = `<style class='oogy-cone-animations'>@keyframes fadeOut { 100% { opacity: 0.2; transform: scale(0.8, 0.8) translate(0, calc(100% + 80px));} } @keyframes fadeIn { 0% { opacity: 0.2; transform: scale(0.8, 0.8) translate(0, calc(100% + 80px)); background: transparent; border-radius: 0px; box-shadow: none; } } @keyframes carousel { 0% { filter: blur(2px) saturate(0%); opacity: 0; } }@keyframes carouselOut { 100% { opacity: 0; filter: saturate(0%); } }</style>`;
             const scaleJS = `
       <img 
         src='data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=' 
@@ -389,7 +394,21 @@ export var Cone;
       " />`
                 .trim()
                 .replace(/\n\s+/g, "");
-            const styleAndResult = `${animationKeyframesHTML}${result}${scaleJS}`;
+            let preloadLinkHTML = "";
+            let imgSrcsToPreload = [];
+            for (let tab of template.tabs) {
+                for (let el of tab.content.elements) {
+                    if (el.type === "img" && el.src) {
+                        imgSrcsToPreload.push(el.src);
+                    }
+                }
+            }
+            if (imgSrcsToPreload.length > 0) {
+                preloadLinkHTML = imgSrcsToPreload
+                    .map((src) => `<link rel='preload' as='image' href='${src}' />`)
+                    .join("");
+            }
+            const styleAndResult = `${preloadLinkHTML}${animationKeyframesHTML}${result}${scaleJS}`;
             return styleAndResult;
         }
         buildTabBar(size) {
@@ -417,14 +436,14 @@ export var Cone;
             const contentItemElementAlignableBox = new ConeElement();
             contentItemElementAlignableBox.classList = ["oogy-cone-alignable-box"];
             contentItemElementAlignableBox.style = styleBuilder.coneAlignableBox;
-            switch (content.style) {
+            switch (content.kind) {
                 default:
-                case ConeTemplateTabContentStyle.jumbotron:
+                case ConeTemplateTabContentKind.jumbotron:
                     contentElement.classList = ["oogy-cone-jumbotron"];
                     contentElement.style = styleBuilder.coneJumbotron;
                     contentItemElementAlignableBox.style["position"] = "absolute";
                     break;
-                case ConeTemplateTabContentStyle.list:
+                case ConeTemplateTabContentKind.list:
                     contentElement.classList = ["oogy-cone-list"];
                     contentElement.style = styleBuilder.coneList;
                     break;
@@ -467,6 +486,7 @@ export var Cone;
                     break;
             }
             contentElement.appendChild(contentItemElementAlignableBox);
+            let imgIdx = 0;
             for (let contentItem of content.elements) {
                 const contentItemElement = new ConeElement();
                 contentItemElement.nodeType = contentItem.type;
@@ -479,6 +499,41 @@ export var Cone;
                         }
                         contentItemElement.setAttribute("src", contentItem.src);
                         contentItemElement.style = styleBuilder.coneJumbotronImg;
+                        contentItemElement.id = `oogy-cone-img-${imgIdx}`;
+                        if (imgIdx > 0) {
+                            contentItemElement.style["display"] = "none";
+                        }
+                        else {
+                            const carouselDuration = content.duration !== undefined
+                                ? content.duration
+                                : Cone.kConeTemplateTabContentDurationDefault;
+                            contentItemElement.onload = `
+                const parentNode = this.parentNode;
+                if (!parentNode && !parentNode.childNodes) { return; }
+
+                const children = Array.from(parentNode.childNodes).filter(n => n.nodeName === 'IMG');
+                if (children.length < 2) { return; }
+
+                var cone_oncarousel = () => {
+                  const showingIdx = children.findIndex(c => c.style.display !== 'none');
+                  const nextIdx = showingIdx + 1 > children.length - 1 ? 0 : showingIdx + 1;
+                  const currEl = children[showingIdx], nextEl = children[nextIdx];
+
+                  currEl.style.animation = 'carouselOut 0.5s ease-out';
+
+                  setTimeout(() => { 
+                    currEl.style.display = 'none';
+                    nextEl.style.display = '';
+                    currEl.style.animation = 'carousel 1.5s ease-out';
+                  }, 500);
+                };
+
+                setInterval(cone_oncarousel, ${carouselDuration});
+              `
+                                .trim()
+                                .replace(/\n\s+/g, "");
+                        }
+                        imgIdx++;
                         break;
                     case "iframe":
                         if (contentItem.src === undefined) {
@@ -505,7 +560,7 @@ export var Cone;
                     contentItemElement.innerText = contentItem.text;
                 }
                 let elementToUse = contentItemElement;
-                if (content.style === ConeTemplateTabContentStyle.list) {
+                if (content.kind === ConeTemplateTabContentKind.list) {
                     elementToUse = new ConeElement();
                     elementToUse.classList = ["oogy-cone-list-item"];
                     elementToUse.style = styleBuilder.coneListItem;

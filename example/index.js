@@ -9,7 +9,7 @@ import { Cone } from "oogy-cone";
 const app = express();
 const port = 3000;
 
-app.use("/png", express.static("png"));
+app.use("/assets", express.static("assets"));
 
 app.use("/", (req, res) => {
   const template = fs.readFileSync("example.cone", "utf8");

@@ -3,17 +3,21 @@
     "background": "#fff",
     "color": "#2b154d"
   },
-  "start": 3,
+  "start": 0,
   "tabs": [
     {
       "title": "🐏",
       "expanded": "Home",
       "content": {
-        "style": "jumbotron",
+        "kind": "jumbotron",
         "elements": [
           {
             "type": "img",
-            "src": "/png/jumbotron.png"
+            "src": "/assets/jumbotron.png"
+          },
+          {
+            "type": "img",
+            "src": "/assets/hallway.jpg"
           },
           {
             "type": "h1",
@@ -30,7 +34,7 @@
       "title": "🎥",
       "expanded": "Trailer",
       "content": {
-        "style": "jumbotron",
+        "kind": "jumbotron",
         "align": "bottom-center",
         "elements": [
           {
@@ -44,7 +48,7 @@
       "title": "🎮",
       "expanded": "Steam",
       "content": {
-        "style": "jumbotron",
+        "kind": "jumbotron",
         "elements": [
           {
             "type": "iframe",
@@ -65,7 +69,7 @@
       "title": "☕️",
       "expanded": "More",
       "content": {
-        "style": "list",
+        "kind": "list",
         "align": "center-center",
         "elements": [
           {
