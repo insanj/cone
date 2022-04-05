@@ -6,14 +6,17 @@
  */
 export module Cone {
   /**
-   * Describes the complete 🍦 cone template, usually saved and expected in UTF-8 encoded JSON. Only two root keys are supported right now:
+   * Describes the complete 🍦 cone template, usually saved and expected in UTF-8 encoded JSON. Only three root keys are supported right now:
    * 1. `tabs`, which matches `ConeTemplateTab`
    * 2. `style`, optional, supports `background` and `color` keys (HTML color vals)
+   * 3. `start`, optional, index to begin with
    */
   export type ConeTemplate = {
     tabs: ConeTemplateTab[];
 
     style?: ConeStyle;
+
+    start?: number;
   };
 
   /**
@@ -102,6 +105,11 @@ export module Cone {
      * Corresponds to `innerText` of the built element.
      */
     text?: string;
+
+    /**
+     * Corresponds to the `href` attribute of an `a` element (hyperlink)
+     */
+    href?: string;
   };
 
   /**
@@ -353,7 +361,10 @@ export module Cone {
         "border-radius": "10px",
         cursor: "pointer",
         color: this.reference.color,
+        "text-shadow": `0px 4px 40px ${this.reference.color}`,
+        overflow: "hidden",
         "white-space": "pre",
+        "box-shadow": "0px 1px 2px 2px rgb(0 0 0 / 15%)",
       };
     }
 
@@ -468,11 +479,79 @@ export module Cone {
     get coneAlignableBox(): ConeStyle {
       return {
         "z-index": "1",
-        position: "absolute",
+        position: "relative", // is overriden by .style logic below
         width: "calc(100% - 140px)",
         height: "calc(100% - 100px)",
         display: "flex",
         "flex-direction": "column",
+      };
+    }
+
+    /**
+     * .oogy-cone-list
+     */
+    get coneList(): ConeStyle {
+      return {
+        position: "relative",
+        padding: "20px 20px",
+        "max-width": "100%",
+        "min-width": "660px",
+        // "aspect-ratio": "1920/1080",
+        display: "flex",
+        "flex-direction": "column",
+        "align-items": "center",
+        "justify-content": "center",
+        "border-radius": "12px",
+        background: "rgba(0,0,0,0.05)",
+        "box-shadow": "inset 0px 0px 10px 0px rgb(0 0 0 / 20%)",
+        animation: "fadeIn 0.6s ease-out",
+      };
+    }
+
+    /**
+     * .oogy-cone-list-item
+     */
+    get coneListItem(): ConeStyle {
+      return {
+        // "z-index": "1",
+        // position: "absolute",
+        // bottom: "38px",
+        // width: "100%",
+        "min-height": "45px",
+        "min-width": "120px",
+        padding: "20px",
+        "box-shadow": "0px 2px 3px 2px rgb(0 0 0 / 20%)",
+        margin: "10px 0px",
+        "border-top-left-radius": "12px",
+        "border-bottom-left-radius": "12px",
+        "border-bottom-right-radius": "12px",
+        cursor: "pointer",
+        background: this.reference.color,
+        display: "flex",
+        "align-items": "center",
+        "justify-content": "center",
+        "font-size": "20px",
+      };
+    }
+    /**
+     * .oogy-cone-list a
+     */
+    get coneListA(): ConeStyle {
+      return {
+        // "z-index": "1",
+        // position: "absolute",
+        // bottom: "38px",
+        margin: "0px",
+        "white-space": "pre",
+        padding: "20px",
+        color: this.reference.color,
+        "background-color": this.reference.background,
+        "text-decoration": "none",
+        "text-shadow": `-1px -1px 24px ${this.reference.color}`,
+        border: `2px solid ${this.reference.background}`,
+        "border-top-left-radius": "12px",
+        "border-bottom-left-radius": "12px",
+        "border-bottom-right-radius": "12px",
       };
     }
   }
@@ -544,6 +623,7 @@ export module Cone {
       tabBarContainerElement.appendChild(tabBarElement);
 
       // - build tab bar items for each thing
+      const selectedIdx = template.start !== undefined ? template.start : 0;
       let i = 0;
       for (let tab of template.tabs) {
         const tabContentElement = this.buildTabContent(
@@ -579,9 +659,9 @@ export module Cone {
         tabItemElement.style = styleBuilder.coneTab;
 
         // handle state-based visibility traits
-        if (i > 0) {
+        if (i !== selectedIdx) {
           tabContentElement.style.display = "none";
-          // autohide tab after the 1st one
+          // autohide non-selected tabs
         } else {
           tabItemElement.style["background-color"] =
             styleBuilder.reference.color;
@@ -626,18 +706,23 @@ export module Cone {
       const contentElement = new ConeElement();
       container.appendChild(contentElement);
 
+      const alignableTypes = ["h1", "p", "a"];
+      const contentItemElementAlignableBox = new ConeElement(); // holds alignable items
+      contentItemElementAlignableBox.classList = ["oogy-cone-alignable-box"];
+      contentItemElementAlignableBox.style = styleBuilder.coneAlignableBox;
+
       switch (content.style) {
         default:
         case ConeTemplateTabContentStyle.jumbotron:
           contentElement.classList = ["oogy-cone-jumbotron"];
           contentElement.style = styleBuilder.coneJumbotron;
+          contentItemElementAlignableBox.style["position"] = "absolute";
+          break;
+        case ConeTemplateTabContentStyle.list:
+          contentElement.classList = ["oogy-cone-list"];
+          contentElement.style = styleBuilder.coneList;
           break;
       }
-
-      const alignableTypes = ["h1", "p"];
-      const contentItemElementAlignableBox = new ConeElement(); // holds alignable items
-      contentItemElementAlignableBox.classList = ["oogy-cone-alignable-box"];
-      contentItemElementAlignableBox.style = styleBuilder.coneAlignableBox;
 
       // perform alignment if provided
       const contentAlign = !content.align
@@ -716,17 +801,34 @@ export module Cone {
           case "p":
             contentItemElement.style = styleBuilder.coneJumbotronP;
             break;
+          case "a":
+            if (contentItem.href === undefined) {
+              break; // unexpected err case here, error understanding template
+            }
+            contentItemElement.setAttribute("href", contentItem.href!);
+            contentItemElement.style = styleBuilder.coneListA;
+            break;
         }
 
         if (contentItem.text !== undefined) {
           contentItemElement.innerText = contentItem.text;
         }
 
+        let elementToUse = contentItemElement;
+
+        // - if list style, we want to wrap whatever this is in the item class/element
+        if (content.style === ConeTemplateTabContentStyle.list) {
+          elementToUse = new ConeElement();
+          elementToUse.classList = ["oogy-cone-list-item"];
+          elementToUse.style = styleBuilder.coneListItem;
+          elementToUse.appendChild(contentItemElement); // wrap in list item el
+        }
+
         // if alignable, add to box, otherwise, add directly
         if (alignableTypes.includes(contentItem.type)) {
-          contentItemElementAlignableBox.appendChild(contentItemElement);
+          contentItemElementAlignableBox.appendChild(elementToUse);
         } else {
-          contentElement.prepend(contentItemElement); // insert before alignable box
+          contentElement.prepend(elementToUse); // insert before alignable box
         }
       }
 

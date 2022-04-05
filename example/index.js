@@ -2,9 +2,6 @@ import express from "express";
 import fs from "fs";
 import { Cone } from "oogy-cone";
 
-// import { document, Element } from 'html-element';
-// console.info("cone-example > imported important shim for document and Element in Node.js env", document, Element);
-
 // import { dirname } from "path";
 // import { fileURLToPath } from "url";
 // const __dirname = dirname(fileURLToPath(import.meta.url));

@@ -122,7 +122,10 @@ export var Cone;
                 "border-radius": "10px",
                 cursor: "pointer",
                 color: this.reference.color,
+                "text-shadow": `0px 4px 40px ${this.reference.color}`,
+                overflow: "hidden",
                 "white-space": "pre",
+                "box-shadow": "0px 1px 2px 2px rgb(0 0 0 / 15%)",
             };
         }
         get coneTabContentContainer() {
@@ -198,11 +201,60 @@ export var Cone;
         get coneAlignableBox() {
             return {
                 "z-index": "1",
-                position: "absolute",
+                position: "relative",
                 width: "calc(100% - 140px)",
                 height: "calc(100% - 100px)",
                 display: "flex",
                 "flex-direction": "column",
+            };
+        }
+        get coneList() {
+            return {
+                position: "relative",
+                padding: "20px 20px",
+                "max-width": "100%",
+                "min-width": "660px",
+                display: "flex",
+                "flex-direction": "column",
+                "align-items": "center",
+                "justify-content": "center",
+                "border-radius": "12px",
+                background: "rgba(0,0,0,0.05)",
+                "box-shadow": "inset 0px 0px 10px 0px rgb(0 0 0 / 20%)",
+                animation: "fadeIn 0.6s ease-out",
+            };
+        }
+        get coneListItem() {
+            return {
+                "min-height": "45px",
+                "min-width": "120px",
+                padding: "20px",
+                "box-shadow": "0px 2px 3px 2px rgb(0 0 0 / 20%)",
+                margin: "10px 0px",
+                "border-top-left-radius": "12px",
+                "border-bottom-left-radius": "12px",
+                "border-bottom-right-radius": "12px",
+                cursor: "pointer",
+                background: this.reference.color,
+                display: "flex",
+                "align-items": "center",
+                "justify-content": "center",
+                "font-size": "20px",
+            };
+        }
+        get coneListA() {
+            return {
+                margin: "0px",
+                "white-space": "pre",
+                padding: "20px",
+                color: this.reference.color,
+                "background-color": this.reference.background,
+                "text-decoration": "none",
+                "text-shadow": `-1px -1px 24px ${this.reference.color}`,
+                border: `2px solid ${this.reference.background}`,
+                "border-top-left-radius": "12px",
+                "border-bottom-left-radius": "12px",
+                "border-bottom-right-radius": "12px",
             };
         }
     }
@@ -246,6 +298,7 @@ export var Cone;
             tabBarElement.classList = ["oogy-cone-tab-bar"];
             tabBarElement.style = styleBuilder.coneTabBar;
             tabBarContainerElement.appendChild(tabBarElement);
+            const selectedIdx = template.start !== undefined ? template.start : 0;
             let i = 0;
             for (let tab of template.tabs) {
                 const tabContentElement = this.buildTabContent(styleBuilder, tab.content);
@@ -272,7 +325,7 @@ export var Cone;
                     .trim()
                     .replace(/\n\s+/g, "");
                 tabItemElement.style = styleBuilder.coneTab;
-                if (i > 0) {
+                if (i !== selectedIdx) {
                     tabContentElement.style.display = "none";
                 }
                 else {
@@ -304,17 +357,22 @@ export var Cone;
             container.classList = ["oogy-cone-tab-content"];
             const contentElement = new ConeElement();
             container.appendChild(contentElement);
+            const alignableTypes = ["h1", "p", "a"];
+            const contentItemElementAlignableBox = new ConeElement();
+            contentItemElementAlignableBox.classList = ["oogy-cone-alignable-box"];
+            contentItemElementAlignableBox.style = styleBuilder.coneAlignableBox;
             switch (content.style) {
                 default:
                 case ConeTemplateTabContentStyle.jumbotron:
                     contentElement.classList = ["oogy-cone-jumbotron"];
                     contentElement.style = styleBuilder.coneJumbotron;
+                    contentItemElementAlignableBox.style["position"] = "absolute";
+                    break;
+                case ConeTemplateTabContentStyle.list:
+                    contentElement.classList = ["oogy-cone-list"];
+                    contentElement.style = styleBuilder.coneList;
                     break;
             }
-            const alignableTypes = ["h1", "p"];
-            const contentItemElementAlignableBox = new ConeElement();
-            contentItemElementAlignableBox.classList = ["oogy-cone-alignable-box"];
-            contentItemElementAlignableBox.style = styleBuilder.coneAlignableBox;
             const contentAlign = !content.align
                 ? Cone.kConeTemplateTabContentAlignmentDefault
                 : content.align;
@@ -379,15 +437,29 @@ export var Cone;
                     case "p":
                         contentItemElement.style = styleBuilder.coneJumbotronP;
                         break;
+                    case "a":
+                        if (contentItem.href === undefined) {
+                            break;
+                        }
+                        contentItemElement.setAttribute("href", contentItem.href);
+                        contentItemElement.style = styleBuilder.coneListA;
+                        break;
                 }
                 if (contentItem.text !== undefined) {
                     contentItemElement.innerText = contentItem.text;
                 }
+                let elementToUse = contentItemElement;
+                if (content.style === ConeTemplateTabContentStyle.list) {
+                    elementToUse = new ConeElement();
+                    elementToUse.classList = ["oogy-cone-list-item"];
+                    elementToUse.style = styleBuilder.coneListItem;
+                    elementToUse.appendChild(contentItemElement);
+                }
                 if (alignableTypes.includes(contentItem.type)) {
-                    contentItemElementAlignableBox.appendChild(contentItemElement);
+                    contentItemElementAlignableBox.appendChild(elementToUse);
                 }
                 else {
-                    contentElement.prepend(contentItemElement);
+                    contentElement.prepend(elementToUse);
                 }
             }
             return container;

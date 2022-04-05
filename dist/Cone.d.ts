@@ -2,6 +2,7 @@ export declare module Cone {
     type ConeTemplate = {
         tabs: ConeTemplateTab[];
         style?: ConeStyle;
+        start?: number;
     };
     type ConeTemplateTab = {
         title: string;
@@ -28,6 +29,7 @@ export declare module Cone {
         type: string;
         src?: string;
         text?: string;
+        href?: string;
     };
     enum ConeTemplateTabContentStyle {
         jumbotron = "jumbotron",
@@ -80,6 +82,9 @@ export declare module Cone {
         get coneJumbotronH1(): ConeStyle;
         get coneJumbotronP(): ConeStyle;
         get coneAlignableBox(): ConeStyle;
+        get coneList(): ConeStyle;
+        get coneListItem(): ConeStyle;
+        get coneListA(): ConeStyle;
     }
     interface ConeBuilderInterface {
         build(options: ConeBuilderBuildOptions): string;

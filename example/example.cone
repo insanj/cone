@@ -3,6 +3,7 @@
     "background": "#fff",
     "color": "#2b154d"
   },
+  "start": 3,
   "tabs": [
     {
       "title": "🐏  Home",
@@ -61,36 +62,27 @@
       "title": "☕️  More",
       "content": {
         "style": "list",
+        "align": "center-center",
         "elements": [
           {
-            "type": "href",
-            "text": "Twitter",
-            "src": "https://twitter.com/OogyCanYouHelp"
+            "type": "a",
+            "text": "🦚   Twitter",
+            "href": "https://twitter.com/OogyCanYouHelp"
           },
           {
-            "type": "href",
-            "text": "Instagram",
-            "src": "https://instagram.com/OogyCanYouHelp"
+            "type": "a",
+            "text": "🎨   Instagram",
+            "href": "https://instagram.com/OogyCanYouHelp"
           },
           {
-            "type": "href",
-            "text": "Youtube",
-            "src": "https://youtube.com/insanj"
+            "type": "a",
+            "text": "👾   Github",
+            "href": "https://github.com/insanj"
           },
           {
-            "type": "href",
-            "text": "Github",
-            "src": "https://github.com/insanj"
-          },
-          {
-            "type": "href",
-            "text": "Email",
-            "src": "mailto:contact@oogycanyouhelp.com"
-          },
-          {
-            "type": "href",
-            "text": "Press Kit",
-            "src": "https://drive.google.com/file/d/10YZxuofJn8aazM0_0sO1G-fEsCgP-BfQ/view?usp=sharing"
+            "type": "a",
+            "text": "📰   Press Kit",
+            "href": "https://drive.google.com/file/d/10YZxuofJn8aazM0_0sO1G-fEsCgP-BfQ/view?usp=sharing"
           }
         ]
       }
