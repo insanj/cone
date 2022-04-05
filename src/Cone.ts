@@ -719,7 +719,7 @@ export module Cone {
           const el = document.getElementById('oogy-cone-tab-content-container');
           const tabs = document.getElementsByClassName('oogy-cone-tab-expanded-text');
 
-          if (window.innerWidth > 800) {
+          if (window.innerWidth > 1080) {
             if (el.style.position === 'relative') { return; }
             
             el.style.position = 'relative';
@@ -772,7 +772,10 @@ export module Cone {
           .join("");
       }
 
-      const styleAndResult = `${preloadLinkHTML}${animationKeyframesHTML}${result}${scaleJS}`;
+      let metaTagString = `<meta name='viewport' content='initial-scale=1, maximum-scale=1'>`;
+      // probably will only work if used in complete innerHTML context
+
+      const styleAndResult = `${metaTagString}${preloadLinkHTML}${animationKeyframesHTML}${result}${scaleJS}`;
       return styleAndResult;
     }
 

@@ -358,7 +358,7 @@ export var Cone;
           const el = document.getElementById('oogy-cone-tab-content-container');
           const tabs = document.getElementsByClassName('oogy-cone-tab-expanded-text');
 
-          if (window.innerWidth > 800) {
+          if (window.innerWidth > 1080) {
             if (el.style.position === 'relative') { return; }
             
             el.style.position = 'relative';
@@ -408,7 +408,8 @@ export var Cone;
                     .map((src) => `<link rel='preload' as='image' href='${src}' />`)
                     .join("");
             }
-            const styleAndResult = `${preloadLinkHTML}${animationKeyframesHTML}${result}${scaleJS}`;
+            let metaTagString = `<meta name='viewport' content='initial-scale=1, maximum-scale=1'>`;
+            const styleAndResult = `${metaTagString}${preloadLinkHTML}${animationKeyframesHTML}${result}${scaleJS}`;
             return styleAndResult;
         }
         buildTabBar(size) {
