@@ -191,6 +191,7 @@ export var Cone;
                 "aspect-ratio": "1920/1080",
                 "border-radius": "12px",
                 "box-shadow": "0px 2px 10px 4px rgb(0 0 0 / 20%)",
+                border: "none",
             };
         }
         get coneJumbotronH1() {
@@ -521,14 +522,16 @@ export var Cone;
 
                   currEl.style.animation = 'carouselOut 0.5s ease-out';
 
-                  setTimeout(() => { 
-                    currEl.style.display = 'none';
-                    nextEl.style.display = '';
-                    currEl.style.animation = 'carousel 1.5s ease-out';
+                  setTimeout(() => {
+                    window.requestAnimationFrame(() => {
+                      currEl.style.display = 'none';
+                      nextEl.style.display = '';
+                      currEl.style.animation = 'carousel 1.5s ease-out';
+                    });
                   }, 500);
                 };
 
-                setInterval(cone_oncarousel, ${carouselDuration});
+                setInterval(() => { window.requestAnimationFrame(cone_oncarousel) }, ${carouselDuration});
               `
                                 .trim()
                                 .replace(/\n\s+/g, "");

@@ -129,8 +129,8 @@ npm run example
 
       /** content/"body" of this tab */
       "content": {
-        /** style, which will help the elements look nice */
-        "style": "jumbotron",
+        /** kind, which will help the elements look nice */
+        "kind": "jumbotron",
 
         /**
          * optional: alignment of alignable items within the
@@ -139,6 +139,11 @@ npm run example
         */
         "align": "bottom-left",
 
+        /**
+         * optional: duration for carousel if multiple img elements
+         */
+        "duration": 500,
+
         /** list of elements we want to show in this tab */
         "elements": [
           {
@@ -146,7 +151,14 @@ npm run example
             "type": "img",
 
             /** here is the image src attribute, which can be any URL that works from where the site is hosted */
-            "src": "/png/jumbotron.png"
+            "src": "/assets/jumbotron.png"
+          },
+          {
+            /** optionally, we can supply more than 1 image and the jumbotron will carousel through them */
+            "type": "img",
+
+            /** here is the image src attribute, which can be any URL that works from where the site is hosted */
+            "src": "/assets/hallway.jpg"
           },
           {
             /** h1 header type, all normal HTML types are used, and inline styles so its easy to customize after generating as well */
@@ -164,10 +176,11 @@ npm run example
       }
     },
     {
-      "title": "🎥  Trailer",
+      "title": "🎥",
+      "expanded": "Trailer",
 
       "content": {
-        "style": "jumbotron",
+        "kind": "jumbotron",
         "elements": [
           {
             "type": "iframe",
@@ -177,9 +190,10 @@ npm run example
       }
     },
     {
-      "title": "🎮  Steam",
+      "title": "🎮",
+      "expanded": "Steam",
       "content": {
-        "style": "jumbotron",
+        "kind": "jumbotron",
         "elements": [
           {
             "type": "iframe",
@@ -197,9 +211,10 @@ npm run example
       }
     },
     {
-      "title": "☕️  More",
+      "title": "☕️",
+      "expanded": "More",
       "content": {
-        "style": "list",
+        "kind": "list",
         "align": "center-center",
         "elements": [
           {
