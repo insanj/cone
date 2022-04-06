@@ -399,7 +399,6 @@ export module Cone {
         overflow: "hidden",
         "white-space": "pre",
         "box-shadow": "0px 1px 2px 2px rgb(0 0 0 / 15%)",
-
         "font-size": "18px",
         "line-height": "25px"
       };
@@ -451,7 +450,7 @@ export module Cone {
         "border-radius": "12px",
         background: "rgba(0,0,0,0.05)",
         "box-shadow": "inset 0px 0px 10px 0px rgb(0 0 0 / 20%)",
-        animation: "fadeIn 0.6s ease-out",
+        animation: "fadeIn 0.6s ease-out"
       };
     }
 
@@ -826,7 +825,6 @@ export module Cone {
         src='data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=' 
         style='display: none;' 
         onload="
-
         var cone_onResize = () => {
           const el = document.getElementById('oogy-cone-tab-content-container');
           const tabs = document.getElementsByClassName('oogy-cone-tab-expanded-text');
@@ -861,6 +859,7 @@ export module Cone {
         };
 
         cone_onResize();
+        setInterval(cone_onResize, 250);
         window.addEventListener('resize', (e) => { 
           cone_onResize();
         });
