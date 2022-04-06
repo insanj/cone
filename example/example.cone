@@ -30,6 +30,22 @@
             "src": "/assets/hallway.jpg"
           },
           {
+            "type": "img",
+            "src": "/assets/studio.gif"
+          },
+          {
+            "type": "img",
+            "src": "/assets/otto.jpg"
+          },
+          {
+            "type": "img",
+            "src": "/assets/battle.jpg"
+          },
+          {
+            "type": "img",
+            "src": "/assets/deck.jpg"
+          },
+          {
             "type": "h1",
             "text": "Oogy: Can You Help"
           },

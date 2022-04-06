@@ -1065,7 +1065,7 @@ export module Cone {
 
                 var cone_oncarousel = () => {
                   const showingIdx = children.findIndex(c => c.style.display !== 'none');
-                  const nextIdx = showingIdx + 1 > children.length - 1 ? 0 : showingIdx + 1;
+                  const nextIdx = showingIdx - 1 < 0 ?  children.length - 1 : showingIdx - 1;
                   const currEl = children[showingIdx], nextEl = children[nextIdx];
 
                   currEl.style.animation = 'carouselOut 0.5s ease-out forwards';
