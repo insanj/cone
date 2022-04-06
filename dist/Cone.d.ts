@@ -94,6 +94,7 @@ export declare module Cone {
         get coneListA(): ConeStyle;
     }
     enum ConeStyleClassName {
+        tabBarContainer = "oogy-cone-tab-bar-container",
         themeableColor = "oogy-cone-themeable-color",
         themeableColorInverse = "oogy-cone-themeable-color-inverse",
         themeableBackground = "oogy-cone-themeable-background",

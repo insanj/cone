@@ -273,6 +273,7 @@ export var Cone;
     Cone.ConeStyleBuilder = ConeStyleBuilder;
     let ConeStyleClassName;
     (function (ConeStyleClassName) {
+        ConeStyleClassName["tabBarContainer"] = "oogy-cone-tab-bar-container";
         ConeStyleClassName["themeableColor"] = "oogy-cone-themeable-color";
         ConeStyleClassName["themeableColorInverse"] = "oogy-cone-themeable-color-inverse";
         ConeStyleClassName["themeableBackground"] = "oogy-cone-themeable-background";
@@ -317,8 +318,9 @@ export var Cone;
             tabContentContainerElement.style = styleBuilder.coneTabContentContainer;
             container.appendChild(tabContentContainerElement);
             const tabBarContainerElement = new ConeElement();
+            tabBarContainerElement.id = ConeStyleClassName.tabBarContainer;
             tabBarContainerElement.classList = [
-                "oogy-cone-tab-bar-container",
+                ConeStyleClassName.tabBarContainer,
                 ConeStyleClassName.themeableBackground,
             ];
             tabBarContainerElement.style = styleBuilder.coneTabBarContainer;
@@ -438,6 +440,7 @@ export var Cone;
         var cone_onResize = () => {
           const el = document.getElementById('oogy-cone-tab-content-container');
           const tabs = document.getElementsByClassName('oogy-cone-tab-expanded-text');
+          const tabBarContainer = document.getElementById('${ConeStyleClassName.tabBarContainer}');
 
           if (window.innerWidth > 1080) {
             if (el.style.position === 'relative') { return; }
@@ -448,6 +451,11 @@ export var Cone;
             el.style.left = 'auto';
             el.style.top = 'auto';
             el.style.transform = 'none';
+
+            tabBarContainer.style.width = '100%';
+            tabBarContainer.style.height = '';
+            tabBarContainer.style.transform = '';
+            tabBarContainer.style.left = '';
 
             for (let tab of tabs) { 
               tab.style.display = '';
@@ -461,6 +469,11 @@ export var Cone;
             el.style.left = '50%';
             el.style.top = '50%';
             el.style.transform = 'translate(-50%, -50%) ' + 'scale(' + scale + ')';
+
+            tabBarContainer.style.left = '50%';
+            tabBarContainer.style.width = '370px';
+            tabBarContainer.style.height = '60px';
+            tabBarContainer.style.transform = 'translate(-50%, 0%) ' + 'scale(' + scale + ')';
 
             for (let tab of tabs) { 
               tab.style.display = 'none';
@@ -494,7 +507,7 @@ export var Cone;
                     .map((src) => `<link rel='preload' as='image' href='${src}' />`)
                     .join("");
             }
-            let metaTagString = `<meta name='viewport' content='initial-scale=1, maximum-scale=1'>`;
+            let metaTagString = `<meta name='viewport' content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no'>`;
             const styleAndResult = `${metaTagString}${preloadLinkHTML}${animationKeyframesHTML}${result}${scaleJS}`;
             return styleAndResult;
         }

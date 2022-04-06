@@ -601,6 +601,10 @@ export module Cone {
    * Wrapper for any class names that are used in more than one place to prevent misuse.
    */
   export enum ConeStyleClassName {
+
+    tabBarContainer = "oogy-cone-tab-bar-container",
+
+    /// themeables
     themeableColor = "oogy-cone-themeable-color",
     themeableColorInverse = "oogy-cone-themeable-color-inverse",
 
@@ -672,8 +676,9 @@ export module Cone {
 
       // build the tab bar, that shows at the bottom at toggles content elements
       const tabBarContainerElement = new ConeElement();
+      tabBarContainerElement.id = ConeStyleClassName.tabBarContainer;
       tabBarContainerElement.classList = [
-        "oogy-cone-tab-bar-container",
+        ConeStyleClassName.tabBarContainer,
         ConeStyleClassName.themeableBackground,
         // indicates can be changed by a styler-style of tab
       ];
@@ -828,6 +833,7 @@ export module Cone {
         var cone_onResize = () => {
           const el = document.getElementById('oogy-cone-tab-content-container');
           const tabs = document.getElementsByClassName('oogy-cone-tab-expanded-text');
+          const tabBarContainer = document.getElementById('${ConeStyleClassName.tabBarContainer}');
 
           if (window.innerWidth > 1080) {
             if (el.style.position === 'relative') { return; }
@@ -838,6 +844,11 @@ export module Cone {
             el.style.left = 'auto';
             el.style.top = 'auto';
             el.style.transform = 'none';
+
+            tabBarContainer.style.width = '100%';
+            tabBarContainer.style.height = '';
+            tabBarContainer.style.transform = '';
+            tabBarContainer.style.left = '';
 
             for (let tab of tabs) { 
               tab.style.display = '';
@@ -851,6 +862,11 @@ export module Cone {
             el.style.left = '50%';
             el.style.top = '50%';
             el.style.transform = 'translate(-50%, -50%) ' + 'scale(' + scale + ')';
+
+            tabBarContainer.style.left = '50%';
+            tabBarContainer.style.width = '370px';
+            tabBarContainer.style.height = '60px';
+            tabBarContainer.style.transform = 'translate(-50%, 0%) ' + 'scale(' + scale + ')';
 
             for (let tab of tabs) { 
               tab.style.display = 'none';
@@ -890,7 +906,7 @@ export module Cone {
           .join("");
       }
 
-      let metaTagString = `<meta name='viewport' content='initial-scale=1, maximum-scale=1'>`;
+      let metaTagString = `<meta name='viewport' content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no'>`;
       // probably will only work if used in complete innerHTML context
 
       const styleAndResult = `${metaTagString}${preloadLinkHTML}${animationKeyframesHTML}${result}${scaleJS}`;
