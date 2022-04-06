@@ -90,6 +90,7 @@ export var Cone;
                 display: "flex",
                 overflow: "hidden",
                 "transform-origin": "center center",
+                "background-color": this.reference.background,
             };
         }
         get coneTabBarContainer() {
@@ -140,7 +141,7 @@ export var Cone;
                 height: "100%",
                 "overflow-y": "scroll",
                 "transform-origin": "center center",
-                background: this.reference.background,
+                "background-color": this.reference.background,
             };
         }
         get coneTabContent() {
@@ -244,7 +245,7 @@ export var Cone;
                 "border-bottom-left-radius": "12px",
                 "border-bottom-right-radius": "12px",
                 cursor: "pointer",
-                background: this.reference.color,
+                "background-color": this.reference.color,
                 display: "flex",
                 "align-items": "center",
                 "justify-content": "center",
@@ -302,6 +303,7 @@ export var Cone;
             container.id = "oogy-cone";
             container.classList = [
                 "oogy-cone",
+                ConeStyleClassName.themeableBackground,
             ];
             container.style = styleBuilder.cone;
             const tabContentContainerElement = new ConeElement();
@@ -322,7 +324,6 @@ export var Cone;
             const tabBarElement = this.buildTabBar(template.tabs.length);
             tabBarElement.classList = [
                 "oogy-cone-tab-bar",
-                ConeStyleClassName.themeableBackground,
             ];
             tabBarElement.style = styleBuilder.coneTabBar;
             tabBarContainerElement.appendChild(tabBarElement);
@@ -400,30 +401,10 @@ export var Cone;
         for (let el of document.getElementsByClassName('${tabItemElement.classList[0]}')) {
           el.style['background-color'] = '${styleBuilder.reference.background}';
           el.style.color = '${styleBuilder.reference.color}';
-
-          if (!el.classList.contains('${ConeStyleClassName.themeableColor}')) {
-            el.classList.add('${ConeStyleClassName.themeableColor}');
-          }
-          if (!el.classList.contains('${ConeStyleClassName.themeableBackground}')) {
-            el.classList.add('${ConeStyleClassName.themeableBackground}');
-          }
-
-          el.classList.remove('${ConeStyleClassName.themeableColorInverse}');
-          el.classList.remove('${ConeStyleClassName.themeableBackgroundInverse}');
         }
         
         this.style['background-color'] = '${styleBuilder.reference.color}';
         this.style.color = '${styleBuilder.reference.background}';
-
-        if (!this.classList.contains('${ConeStyleClassName.themeableColorInverse}')) {
-          this.classList.add('${ConeStyleClassName.themeableColorInverse}');
-        }
-        if (!this.classList.contains('${ConeStyleClassName.themeableBackgroundInverse}')) {
-          this.classList.add('${ConeStyleClassName.themeableBackgroundInverse}');
-        }
-
-        this.classList.remove('${ConeStyleClassName.themeableColor}');
-        this.classList.remove('${ConeStyleClassName.themeableBackground}');
 
         for (let el of document.getElementsByClassName('${tabContentElement.classList[0]}')) {
           el.style.display = 'none';
@@ -524,15 +505,12 @@ export var Cone;
             const element = new ConeElement();
             element.classList = [
                 "oogy-cone-tab",
-                ConeStyleClassName.themeableBorder,
-                ConeStyleClassName.themeableColor,
-                ConeStyleClassName.themeableTextShadow,
             ];
             element.innerText = title;
             const expandedElement = new ConeElement();
             expandedElement.nodeType = "span";
             expandedElement.classList = ["oogy-cone-tab-expanded-text"];
-            expandedElement.innerText = `  ${expanded}`;
+            expandedElement.innerText = `&nbsp;&nbsp;&nbsp;${expanded}`;
             element.appendChild(expandedElement);
             return element;
         }
