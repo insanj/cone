@@ -195,17 +195,20 @@ export var Cone;
                 "border-radius": "12px",
                 "box-shadow": "0px 2px 10px 4px rgb(0 0 0 / 20%)",
                 border: "none",
+                "z-index": "3"
             };
         }
         get coneJumbotronH1() {
             return {
                 margin: "0px",
+                "z-index": "3"
             };
         }
         get coneJumbotronP() {
             return {
                 margin: "0px",
                 "white-space": "pre-line",
+                "z-index": "3"
             };
         }
         get coneAlignableBox() {
@@ -252,6 +255,7 @@ export var Cone;
                 "align-items": "center",
                 "justify-content": "center",
                 "font-size": "20px",
+                "z-index": "3"
             };
         }
         get coneListA() {
@@ -267,6 +271,7 @@ export var Cone;
                 "border-top-left-radius": "12px",
                 "border-bottom-left-radius": "12px",
                 "border-bottom-right-radius": "12px",
+                "z-index": "3"
             };
         }
     }
