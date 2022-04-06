@@ -510,7 +510,12 @@ export var Cone;
             const expandedElement = new ConeElement();
             expandedElement.nodeType = "span";
             expandedElement.classList = ["oogy-cone-tab-expanded-text"];
-            expandedElement.innerText = `&nbsp;&nbsp;&nbsp;${expanded}`;
+            if (expanded && expanded.length > 0) {
+                expandedElement.innerText = `&nbsp;&nbsp;&nbsp;${expanded}`;
+            }
+            else {
+                expandedElement.innerText = `&nbsp;`;
+            }
             element.appendChild(expandedElement);
             return element;
         }

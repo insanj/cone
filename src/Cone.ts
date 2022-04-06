@@ -917,7 +917,13 @@ export module Cone {
       const expandedElement = new ConeElement();
       expandedElement.nodeType = "span";
       expandedElement.classList = ["oogy-cone-tab-expanded-text"];
-      expandedElement.innerText = `&nbsp;&nbsp;&nbsp;${expanded}`; // auto add 2 spaces (lol)
+
+      if (expanded && expanded.length > 0) {
+        expandedElement.innerText = `&nbsp;&nbsp;&nbsp;${expanded}`; // auto add 3 spaces (lol)
+      } else {
+        expandedElement.innerText = `&nbsp;`;
+      }
+
       element.appendChild(expandedElement);
 
       return element;
