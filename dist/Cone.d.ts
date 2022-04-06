@@ -6,7 +6,7 @@ export declare module Cone {
     };
     type ConeTemplateTab = {
         title: string;
-        expanded: string;
+        expanded?: string;
         content: ConeTemplateTabContent;
     };
     type ConeTemplateTabContentAlignment = string;
@@ -25,8 +25,9 @@ export declare module Cone {
     type ConeTemplateTabContent = {
         kind: ConeTemplateTabContentKind;
         duration?: number;
-        elements: ConeTemplateTabContentElement[];
+        elements?: ConeTemplateTabContentElement[];
         align?: ConeTemplateTabContentAlignment;
+        stylerStyle?: ConeStyle;
     };
     type ConeTemplateTabContentElement = {
         type: string;
@@ -36,7 +37,8 @@ export declare module Cone {
     };
     enum ConeTemplateTabContentKind {
         jumbotron = "jumbotron",
-        list = "list"
+        list = "list",
+        styler = "styler"
     }
     interface ConeElementInterface {
         nodeType: string;
@@ -90,6 +92,14 @@ export declare module Cone {
         get coneList(): ConeStyle;
         get coneListItem(): ConeStyle;
         get coneListA(): ConeStyle;
+    }
+    enum ConeStyleClassName {
+        themeableColor = "oogy-cone-themeable-color",
+        themeableColorInverse = "oogy-cone-themeable-color-inverse",
+        themeableBackground = "oogy-cone-themeable-background",
+        themeableBackgroundInverse = "oogy-cone-themeable-background-inverse",
+        themeableBorder = "oogy-cone-themeable-border",
+        themeableTextShadow = "oogy-cone-themeable-text-shadow"
     }
     interface ConeBuilderInterface {
         build(options: ConeBuilderBuildOptions): string;

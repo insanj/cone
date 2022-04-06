@@ -18,6 +18,7 @@ export var Cone;
     (function (ConeTemplateTabContentKind) {
         ConeTemplateTabContentKind["jumbotron"] = "jumbotron";
         ConeTemplateTabContentKind["list"] = "list";
+        ConeTemplateTabContentKind["styler"] = "styler";
     })(ConeTemplateTabContentKind = Cone.ConeTemplateTabContentKind || (Cone.ConeTemplateTabContentKind = {}));
     class ConeElement {
         constructor() {
@@ -267,11 +268,21 @@ export var Cone;
         }
     }
     Cone.ConeStyleBuilder = ConeStyleBuilder;
+    let ConeStyleClassName;
+    (function (ConeStyleClassName) {
+        ConeStyleClassName["themeableColor"] = "oogy-cone-themeable-color";
+        ConeStyleClassName["themeableColorInverse"] = "oogy-cone-themeable-color-inverse";
+        ConeStyleClassName["themeableBackground"] = "oogy-cone-themeable-background";
+        ConeStyleClassName["themeableBackgroundInverse"] = "oogy-cone-themeable-background-inverse";
+        ConeStyleClassName["themeableBorder"] = "oogy-cone-themeable-border";
+        ConeStyleClassName["themeableTextShadow"] = "oogy-cone-themeable-text-shadow";
+    })(ConeStyleClassName = Cone.ConeStyleClassName || (Cone.ConeStyleClassName = {}));
     class ConeBuilder {
         static build(options) {
             return new ConeBuilder().build(options);
         }
         build(options) {
+            var _a, _b;
             if (!options ||
                 options == null ||
                 options == undefined ||
@@ -297,34 +308,122 @@ export var Cone;
             tabContentContainerElement.id = "oogy-cone-tab-content-container";
             tabContentContainerElement.classList = [
                 "oogy-cone-tab-content-container",
+                ConeStyleClassName.themeableBackground,
             ];
             tabContentContainerElement.style = styleBuilder.coneTabContentContainer;
             container.appendChild(tabContentContainerElement);
             const tabBarContainerElement = new ConeElement();
-            tabBarContainerElement.classList = ["oogy-cone-tab-bar-container"];
+            tabBarContainerElement.classList = [
+                "oogy-cone-tab-bar-container",
+                ConeStyleClassName.themeableBackground,
+            ];
             tabBarContainerElement.style = styleBuilder.coneTabBarContainer;
             container.appendChild(tabBarContainerElement);
             const tabBarElement = this.buildTabBar(template.tabs.length);
-            tabBarElement.classList = ["oogy-cone-tab-bar"];
+            tabBarElement.classList = [
+                "oogy-cone-tab-bar",
+                ConeStyleClassName.themeableBackground,
+            ];
             tabBarElement.style = styleBuilder.coneTabBar;
             tabBarContainerElement.appendChild(tabBarElement);
             const selectedIdx = template.start !== undefined ? template.start : 0;
             let i = 0;
+            const baseStyle = template.style
+                ? template.style
+                : Cone.kConeStyleDefaultReference;
+            const baseColor = baseStyle.color
+                ? baseStyle.color
+                : Cone.kConeStyleDefaultReference.color;
+            const baseBackground = baseStyle.background
+                ? baseStyle.background
+                : Cone.kConeStyleDefaultReference.background;
             for (let tab of template.tabs) {
+                if (tab.content.kind === ConeTemplateTabContentKind.styler) {
+                    const tabItemElement = this.buildTabItem(tab.title, tab.expanded ? tab.expanded : "");
+                    tabItemElement.style = styleBuilder.coneTab;
+                    const stylerColor = ((_a = tab.content.stylerStyle) === null || _a === void 0 ? void 0 : _a.color)
+                        ? tab.content.stylerStyle.color
+                        : baseColor;
+                    const stylerBackground = ((_b = tab.content.stylerStyle) === null || _b === void 0 ? void 0 : _b.background)
+                        ? tab.content.stylerStyle.background
+                        : baseBackground;
+                    tabItemElement.onclick = `
+            const themeableColorEls = document.getElementsByClassName('${ConeStyleClassName.themeableColor}');
+            const themeableColorInverseEls = document.getElementsByClassName('${ConeStyleClassName.themeableColorInverse}');
+
+            const themeableBackgroundEls = document.getElementsByClassName('${ConeStyleClassName.themeableBackground}');
+            const themeableBackgroundInverseEls = document.getElementsByClassName('${ConeStyleClassName.themeableBackgroundInverse}');
+
+            const themeableBorderEls = document.getElementsByClassName('${ConeStyleClassName.themeableBorder}');
+            const themeableTextShadowEls = document.getElementsByClassName('${ConeStyleClassName.themeableTextShadow}');
+
+            if (this.hasAttribute('oogy-cone-selected')) {
+              this.removeAttribute('oogy-cone-selected');
+
+              for (let tc of themeableColorEls) { tc.style.color = '${baseColor}'; }
+              for (let tc of themeableColorInverseEls) { tc.style.color = '${baseBackground}'; }
+
+              for (let tc of themeableBackgroundEls) { tc.style['background-color'] = '${baseBackground}'; }
+              for (let tc of themeableBackgroundInverseEls) { tc.style['background-color'] = '${baseColor}'; }
+
+              for (let tc of themeableBorderEls) { tc.style['border-color'] = '${baseColor}'; }
+              for (let tc of themeableTextShadowEls) { tc.style['text-shadow-color'] = '${baseColor}'; }
+            } else {
+              this.setAttribute('oogy-cone-selected', 'true');
+
+              for (let tc of themeableColorEls) { tc.style.color = '${stylerColor}'; }
+              for (let tc of themeableColorInverseEls) { tc.style.color = '${stylerBackground}'; }
+                            
+              for (let tc of themeableBackgroundEls) { tc.style['background-color'] = '${stylerBackground}'; }
+              for (let tc of themeableBackgroundInverseEls) { tc.style['background-color'] = '${stylerColor}'; }
+
+              for (let tc of themeableBorderEls) { tc.style['border-color'] = '${stylerColor}'; }
+              for (let tc of themeableTextShadowEls) { tc.style['text-shadow-color'] = '${stylerColor}'; }
+            }
+          `
+                        .trim()
+                        .replace(/\n\s+/g, "");
+                    tabBarElement.appendChild(tabItemElement);
+                    i++;
+                    continue;
+                }
                 const tabContentElement = this.buildTabContent(styleBuilder, tab.content);
-                tabContentElement.classList = ["oogy-cone-tab-content"];
+                tabContentElement.classList = [
+                    "oogy-cone-tab-content",
+                    ConeStyleClassName.themeableColor,
+                ];
                 tabContentElement.id = `oogy-cone-tab-content-${i}`;
                 tabContentElement.style = styleBuilder.coneTabContent;
                 tabContentContainerElement.appendChild(tabContentElement);
-                const tabItemElement = this.buildTabItem(tab.title, tab.expanded);
+                const tabItemElement = this.buildTabItem(tab.title, tab.expanded ? tab.expanded : "");
                 tabItemElement.onclick = `
         for (let el of document.getElementsByClassName('${tabItemElement.classList[0]}')) {
           el.style['background-color'] = '${styleBuilder.reference.background}';
           el.style.color = '${styleBuilder.reference.color}';
+
+          if (!el.classList.contains('${ConeStyleClassName.themeableColor}')) {
+            el.classList.add('${ConeStyleClassName.themeableColor}');
+          }
+          if (!el.classList.contains('${ConeStyleClassName.themeableBackground}')) {
+            el.classList.add('${ConeStyleClassName.themeableBackground}');
+          }
+
+          el.classList.remove('${ConeStyleClassName.themeableColorInverse}');
+          el.classList.remove('${ConeStyleClassName.themeableBackgroundInverse}');
         }
         
         this.style['background-color'] = '${styleBuilder.reference.color}';
         this.style.color = '${styleBuilder.reference.background}';
+
+        if (!this.classList.contains('${ConeStyleClassName.themeableColorInverse}')) {
+          this.classList.add('${ConeStyleClassName.themeableColorInverse}');
+        }
+        if (!this.classList.contains('${ConeStyleClassName.themeableBackgroundInverse}')) {
+          this.classList.add('${ConeStyleClassName.themeableBackgroundInverse}');
+        }
+
+        this.classList.remove('${ConeStyleClassName.themeableColor}');
+        this.classList.remove('${ConeStyleClassName.themeableBackground}');
 
         for (let el of document.getElementsByClassName('${tabContentElement.classList[0]}')) {
           el.style.display = 'none';
@@ -397,6 +496,10 @@ export var Cone;
             let preloadLinkHTML = "";
             let imgSrcsToPreload = [];
             for (let tab of template.tabs) {
+                if (tab.content.kind === ConeTemplateTabContentKind.styler ||
+                    !tab.content.elements) {
+                    continue;
+                }
                 for (let el of tab.content.elements) {
                     if (el.type === "img" && el.src) {
                         imgSrcsToPreload.push(el.src);
@@ -419,7 +522,12 @@ export var Cone;
         }
         buildTabItem(title, expanded) {
             const element = new ConeElement();
-            element.classList = ["oogy-cone-tab"];
+            element.classList = [
+                "oogy-cone-tab",
+                ConeStyleClassName.themeableBorder,
+                ConeStyleClassName.themeableColor,
+                ConeStyleClassName.themeableTextShadow,
+            ];
             element.innerText = title;
             const expandedElement = new ConeElement();
             expandedElement.nodeType = "span";
@@ -488,7 +596,7 @@ export var Cone;
             }
             contentElement.appendChild(contentItemElementAlignableBox);
             let imgIdx = 0;
-            for (let contentItem of content.elements) {
+            for (let contentItem of content.elements ? content.elements : []) {
                 const contentItemElement = new ConeElement();
                 contentItemElement.nodeType = contentItem.type;
                 switch (contentItem.type) {
@@ -557,6 +665,7 @@ export var Cone;
                         }
                         contentItemElement.setAttribute("href", contentItem.href);
                         contentItemElement.style = styleBuilder.coneListA;
+                        contentItemElement.classList.push(ConeStyleClassName.themeableColor, ConeStyleClassName.themeableBackground, ConeStyleClassName.themeableTextShadow, ConeStyleClassName.themeableBorder);
                         break;
                 }
                 if (contentItem.text !== undefined) {
@@ -565,7 +674,10 @@ export var Cone;
                 let elementToUse = contentItemElement;
                 if (content.kind === ConeTemplateTabContentKind.list) {
                     elementToUse = new ConeElement();
-                    elementToUse.classList = ["oogy-cone-list-item"];
+                    elementToUse.classList = [
+                        "oogy-cone-list-item",
+                        ConeStyleClassName.themeableBackgroundInverse,
+                    ];
                     elementToUse.style = styleBuilder.coneListItem;
                     elementToUse.appendChild(contentItemElement);
                 }
