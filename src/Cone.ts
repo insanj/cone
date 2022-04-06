@@ -399,6 +399,9 @@ export module Cone {
         overflow: "hidden",
         "white-space": "pre",
         "box-shadow": "0px 1px 2px 2px rgb(0 0 0 / 15%)",
+
+        "font-size": "18px",
+        "line-height": "25px"
       };
     }
 
