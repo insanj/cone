@@ -1,7 +1,7 @@
 {
   "name": "oogy-cone",
-  "version": "0.4.1",
-  "description": " 🍦 vanilla js static pwa generator, built in ts for oogy: can you help (~22kB)",
+  "version": "0.4.2",
+  "description": " 🍦 vanilla js static pwa generator, built in ts for oogy: can you help (~23kB)",
   "type": "module",
   "main": "dist/Cone.js",
   "private": "true",
