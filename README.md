@@ -1,6 +1,6 @@
 # cone
 
-🍦 vanilla js static pwa generator, built in ts for [Oogy: Can You Help](https://oogycanyouhelp.com) (~22kB)
+🍦 vanilla js static pwa generator, built in ts for [Oogy: Can You Help](https://oogycanyouhelp.com) (~23kB)
 
 [✨ Go to live example on Github Pages](https://insanj.github.io/cone/example.html)
 
@@ -13,6 +13,17 @@ Does not require any dependencies. Treats Browser and Node.js equally. Uses Type
 Wraps all Browser (DOM) methods and classes so 🍦 cone generates to a string consistently in every environment. No need for `window`, `document`, `Element`, or `jquery`.
 
 Why? For fun! I thought a completely in-house static website generator would be a good thing to maintain using current ECMAScript standards for my current projects, as well as a demo of some of the techniques from [Oogy: Can You Help](https://oogycanyouhelp.com) itself.
+
+## Techniques
+
+Some noteworthy techniques used in 🍦 cone that may be nice learning opportunities:
+
+- TypeScript module with deep `type`, `class` usage which is identical on any platform
+- Adding complex `onclick` handlers when generating HTML elements for tab swapping, animations (which also uses `window.crypto.randomUUID()` to prevent overlap)
+- Adding CSS keyframe animations in a `<style>` element served with the final result
+- Adding responsive JS scaling handler via transparent `<image>` pixel per tab content element
+- Including `<link>` preload and `<meta>` viewport tags in the case of full HTML replacement
+- Using `dist/` directory, exporting declarations, and minifying the final output with Typescript and command line tools
 
 ## Install
 
