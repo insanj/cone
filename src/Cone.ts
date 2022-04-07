@@ -82,25 +82,26 @@ export module Cone {
     kind: ConeTemplateTabContentKind;
 
     /**
-     * Milliseconds. Animation duration. If more than 1 media element is given and an animation is scheduled, this will be used for its duration instead of the default.
+     * Optional: Milliseconds. Animation duration. If more than 1 media element is given and an animation is scheduled, this will be used for its duration instead of the default.
      */
     duration?: number;
 
     /**
-     * Elements which will be encoded using the middleman of ConeElement
+     * Optional: Elements which will be encoded using the middleman of ConeElement
      * @see ConeElementInterface
      */
     elements?: ConeTemplateTabContentElement[];
 
     /**
-     * Alignment for alignable elements (usually, images/video/big content are not alignable, but everything else is)
+     * Optional: Alignment for alignable elements (usually, images/video/big content are not alignable, but everything else is)
      */
     align?: ConeTemplateTabContentAlignment;
 
     /**
-     * Root style to alternate to when activating this element
+     * Optional: Root style to alternate to when activating this element
      */
     stylerStyle?: ConeStyle;
+
   };
 
   /**
@@ -114,19 +115,24 @@ export module Cone {
     type: string;
 
     /**
-     * Will attempt to set the `src` attribute of the built element. Only works on things like `img`.
+     * Optional: Will attempt to set the `src` attribute of the built element. Only works on things like `img`.
      */
     src?: string;
 
     /**
-     * Corresponds to `innerText` of the built element.
+     * Optional: Corresponds to `innerText` of the built element.
      */
     text?: string;
 
     /**
-     * Corresponds to the `href` attribute of an `a` element (hyperlink)
+     * Optional: Corresponds to the `href` attribute of an `a` element (hyperlink)
      */
     href?: string;
+
+    /**
+     * Optional: any set of valid CSS styles to apply to this element. Good for changing defaults for images, for example.
+     */
+    style?: ConeStyle;
   };
 
   /**
@@ -412,7 +418,7 @@ export module Cone {
         position: "relative",
         width: "100%",
         height: "100%",
-        "overflow-y": "scroll",
+        "overflow-y": "hidden", // responsibility of anim to restore/provide scroll ability
         "transform-origin": "center center", // used for scaling
         "background-color": this.reference.background,
       };
@@ -432,6 +438,7 @@ export module Cone {
         display: "flex",
         "align-items": "center",
         "justify-content": "center",
+        "overflow": "visible"
       };
     }
 
@@ -467,6 +474,7 @@ export module Cone {
         "border-radius": "12px",
         "box-shadow": "0px 2px 10px 4px rgb(0 0 0 / 20%)",
         // animation: "carousel 1.5s ease-out",
+        "aspect-ratio": "1920/1080"
       };
     }
 
@@ -609,6 +617,9 @@ export module Cone {
 
     tabBarContainer = "oogy-cone-tab-bar-container",
 
+    tabContentContainer = "oogy-cone-tab-content-container",
+
+
     /// themeables
     themeableColor = "oogy-cone-themeable-color",
     themeableColorInverse = "oogy-cone-themeable-color-inverse",
@@ -671,9 +682,9 @@ export module Cone {
 
       // build tab content container (where the main "body" shows)
       const tabContentContainerElement = new ConeElement();
-      tabContentContainerElement.id = "oogy-cone-tab-content-container";
+      tabContentContainerElement.id = ConeStyleClassName.tabContentContainer;
       tabContentContainerElement.classList = [
-        "oogy-cone-tab-content-container",
+        ConeStyleClassName.tabContentContainer,
         ConeStyleClassName.themeableBackground,
       ];
       tabContentContainerElement.style = styleBuilder.coneTabContentContainer;
@@ -802,7 +813,32 @@ export module Cone {
           el.style.display = 'none';
         }
 
-        document.getElementById('${tabContentElement.id}').style.display = 'flex';
+        const container = document.getElementById('${ConeStyleClassName.tabContentContainer}');
+        container.style['overflow-y'] = 'hidden';
+        console.log(container);
+
+        const tabContentEl = document.getElementById('${tabContentElement.id}');
+
+        const tempAnimHolder = tabContentEl.style.animation;
+        tabContentEl.style.animation = '';
+        tabContentEl.style.animation = tempAnimHolder;
+
+        window.requestAnimationFrame(() => {
+          tabContentEl.style.display = 'flex';
+        });
+
+        const animDur = 1200;
+        const uuidExpectation = window.crypto.randomUUID();
+        const expectAttrName = 'cone-overflow-expectation';
+        container.setAttribute(expectAttrName, uuidExpectation);
+        setTimeout(() => {
+          const encodedExpectation = container.getAttribute(expectAttrName);
+          if (encodedExpectation !== uuidExpectation) { return; }
+          
+          window.requestAnimationFrame(() => {
+            container.style['overflow-y'] = 'scroll';
+          });
+        }, 1200);
         `
           .trim()
           .replace(/\n\s+/g, "");
@@ -836,7 +872,7 @@ export module Cone {
         style='display: none;' 
         onload="
         var cone_onResize = () => {
-          const el = document.getElementById('oogy-cone-tab-content-container');
+          const el = document.getElementById('${ConeStyleClassName.tabContentContainer}');
           const tabs = document.getElementsByClassName('oogy-cone-tab-expanded-text');
           const tabBarContainer = document.getElementById('${ConeStyleClassName.tabBarContainer}');
 
@@ -1119,6 +1155,14 @@ export module Cone {
 
         if (contentItem.text !== undefined) {
           contentItemElement.innerText = contentItem.text;
+        }
+
+        if (contentItem.style !== undefined) {
+          const stylesToMerge = Object.keys(contentItem.style);
+          for (let styleKey of stylesToMerge) {
+            const value = contentItem.style[styleKey];
+            contentItemElement.style[styleKey] = value;
+          } // could probably replace with Object.assign (but HTML compat?)
         }
 
         let elementToUse = contentItemElement;

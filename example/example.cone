@@ -23,7 +23,10 @@
         "elements": [
           {
             "type": "img",
-            "src": "/assets/jumbotron.png"
+            "src": "/assets/jumbotron.png",
+            "style": {
+              "aspect-ratio": "1920/1080"
+            }
           },
           {
             "type": "img",

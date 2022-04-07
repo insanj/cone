@@ -141,7 +141,7 @@ export var Cone;
                 position: "relative",
                 width: "100%",
                 height: "100%",
-                "overflow-y": "scroll",
+                "overflow-y": "hidden",
                 "transform-origin": "center center",
                 "background-color": this.reference.background,
             };
@@ -156,6 +156,7 @@ export var Cone;
                 display: "flex",
                 "align-items": "center",
                 "justify-content": "center",
+                "overflow": "visible"
             };
         }
         get coneJumbotron() {
@@ -182,6 +183,7 @@ export var Cone;
                 height: "auto",
                 "border-radius": "12px",
                 "box-shadow": "0px 2px 10px 4px rgb(0 0 0 / 20%)",
+                "aspect-ratio": "1920/1080"
             };
         }
         get coneJumbotronIFrame() {
@@ -279,6 +281,7 @@ export var Cone;
     let ConeStyleClassName;
     (function (ConeStyleClassName) {
         ConeStyleClassName["tabBarContainer"] = "oogy-cone-tab-bar-container";
+        ConeStyleClassName["tabContentContainer"] = "oogy-cone-tab-content-container";
         ConeStyleClassName["themeableColor"] = "oogy-cone-themeable-color";
         ConeStyleClassName["themeableColorInverse"] = "oogy-cone-themeable-color-inverse";
         ConeStyleClassName["themeableBackground"] = "oogy-cone-themeable-background";
@@ -315,9 +318,9 @@ export var Cone;
             ];
             container.style = styleBuilder.cone;
             const tabContentContainerElement = new ConeElement();
-            tabContentContainerElement.id = "oogy-cone-tab-content-container";
+            tabContentContainerElement.id = ConeStyleClassName.tabContentContainer;
             tabContentContainerElement.classList = [
-                "oogy-cone-tab-content-container",
+                ConeStyleClassName.tabContentContainer,
                 ConeStyleClassName.themeableBackground,
             ];
             tabContentContainerElement.style = styleBuilder.coneTabContentContainer;
@@ -419,7 +422,32 @@ export var Cone;
           el.style.display = 'none';
         }
 
-        document.getElementById('${tabContentElement.id}').style.display = 'flex';
+        const container = document.getElementById('${ConeStyleClassName.tabContentContainer}');
+        container.style['overflow-y'] = 'hidden';
+        console.log(container);
+
+        const tabContentEl = document.getElementById('${tabContentElement.id}');
+
+        const tempAnimHolder = tabContentEl.style.animation;
+        tabContentEl.style.animation = '';
+        tabContentEl.style.animation = tempAnimHolder;
+
+        window.requestAnimationFrame(() => {
+          tabContentEl.style.display = 'flex';
+        });
+
+        const animDur = 1200;
+        const uuidExpectation = window.crypto.randomUUID();
+        const expectAttrName = 'cone-overflow-expectation';
+        container.setAttribute(expectAttrName, uuidExpectation);
+        setTimeout(() => {
+          const encodedExpectation = container.getAttribute(expectAttrName);
+          if (encodedExpectation !== uuidExpectation) { return; }
+          
+          window.requestAnimationFrame(() => {
+            container.style['overflow-y'] = 'scroll';
+          });
+        }, 1200);
         `
                     .trim()
                     .replace(/\n\s+/g, "");
@@ -443,7 +471,7 @@ export var Cone;
         style='display: none;' 
         onload="
         var cone_onResize = () => {
-          const el = document.getElementById('oogy-cone-tab-content-container');
+          const el = document.getElementById('${ConeStyleClassName.tabContentContainer}');
           const tabs = document.getElementsByClassName('oogy-cone-tab-expanded-text');
           const tabBarContainer = document.getElementById('${ConeStyleClassName.tabBarContainer}');
 
@@ -673,6 +701,13 @@ export var Cone;
                 }
                 if (contentItem.text !== undefined) {
                     contentItemElement.innerText = contentItem.text;
+                }
+                if (contentItem.style !== undefined) {
+                    const stylesToMerge = Object.keys(contentItem.style);
+                    for (let styleKey of stylesToMerge) {
+                        const value = contentItem.style[styleKey];
+                        contentItemElement.style[styleKey] = value;
+                    }
                 }
                 let elementToUse = contentItemElement;
                 if (content.kind === ConeTemplateTabContentKind.list) {

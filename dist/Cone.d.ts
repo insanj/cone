@@ -34,6 +34,7 @@ export declare module Cone {
         src?: string;
         text?: string;
         href?: string;
+        style?: ConeStyle;
     };
     enum ConeTemplateTabContentKind {
         jumbotron = "jumbotron",
@@ -95,6 +96,7 @@ export declare module Cone {
     }
     enum ConeStyleClassName {
         tabBarContainer = "oogy-cone-tab-bar-container",
+        tabContentContainer = "oogy-cone-tab-content-container",
         themeableColor = "oogy-cone-themeable-color",
         themeableColorInverse = "oogy-cone-themeable-color-inverse",
         themeableBackground = "oogy-cone-themeable-background",
