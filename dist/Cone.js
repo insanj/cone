@@ -91,6 +91,7 @@ export var Cone;
                 overflow: "hidden",
                 "transform-origin": "center center",
                 "background-color": this.reference.background,
+                "animation": "delayedFade 1s ease-out forwards"
             };
         }
         get coneTabBarContainer() {
@@ -110,7 +111,6 @@ export var Cone;
         get coneTabBar() {
             return {
                 background: this.reference.background,
-                "backdrop-filter": "blur(10px)",
                 "font-weight": "500",
                 padding: "10px",
                 "border-radius": "12px",
@@ -133,7 +133,8 @@ export var Cone;
                 "white-space": "pre",
                 "box-shadow": "0px 1px 2px 2px rgb(0 0 0 / 15%)",
                 "font-size": "18px",
-                "line-height": "25px"
+                "line-height": "25px",
+                "-webkit-tap-highlight-color": "transparent"
             };
         }
         get coneTabContentContainer() {
@@ -443,7 +444,7 @@ export var Cone;
         setTimeout(() => {
           const encodedExpectation = container.getAttribute(expectAttrName);
           if (encodedExpectation !== uuidExpectation) { return; }
-          
+
           window.requestAnimationFrame(() => {
             container.style['overflow-y'] = 'scroll';
           });
@@ -464,7 +465,7 @@ export var Cone;
                 i++;
             }
             const result = container.outerHTML;
-            const animationKeyframesHTML = `<style class='oogy-cone-animations'>@keyframes fadeOut { 100% { opacity: 0.2; transform: scale(0.8, 0.8) translate(0, calc(100% + 80px));} } @keyframes fadeIn { 0% { opacity: 0.2; transform: scale(0.8, 0.8) translate(0, calc(100% + 80px)); background: transparent; border-radius: 0px; box-shadow: none; } } @keyframes carousel { 0% { filter: blur(2px) saturate(0%); opacity: 0; } }@keyframes carouselOut { 100% { opacity: 0; filter: saturate(0%); } }</style>`;
+            const animationKeyframesHTML = `<style class='oogy-cone-animations'>@keyframes fadeOut { 100% { opacity: 0.2; transform: scale(0.8, 0.8) translate(0, calc(100% + 80px));} } @keyframes fadeIn { 0% { opacity: 0.2; transform: scale(0.8, 0.8) translate(0, calc(100% + 80px)); background: transparent; border-radius: 0px; box-shadow: none; } } @keyframes carousel { 0% { filter: blur(2px) saturate(0%); opacity: 0; } }@keyframes carouselOut { 100% { opacity: 0; filter: saturate(0%); } }@keyframes delayedFade { 0% { opacity: 0; } 50% { opacity: 0; } 100% { opacity: 1.0; } } </style>`;
             const scaleJS = `
       <img 
         src='data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=' 
@@ -506,7 +507,8 @@ export var Cone;
             tabBarContainer.style.left = '50%';
             tabBarContainer.style.width = '370px';
             tabBarContainer.style.height = '60px';
-            tabBarContainer.style.transform = 'translate(-50%, 0%) ' + 'scale(' + scale + ')';
+            const tabScale = scale * 1.5;
+            tabBarContainer.style.transform = 'translate(-50%, 0%) ' + 'scale(' + tabScale + ')';
 
             for (let tab of tabs) { 
               tab.style.display = 'none';

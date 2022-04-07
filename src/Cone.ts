@@ -352,6 +352,7 @@ export module Cone {
         overflow: "hidden",
         "transform-origin": "center center", // used when scaling in small windows
         "background-color": this.reference.background,
+        "animation": "delayedFade 1s ease-out forwards"
       };
     }
 
@@ -379,7 +380,7 @@ export module Cone {
     get coneTabBar(): ConeStyle {
       return {
         background: this.reference.background,
-        "backdrop-filter": "blur(10px)",
+        // "backdrop-filter": "blur(10px)",
         "font-weight": "500",
         padding: "10px",
         "border-radius": "12px",
@@ -406,7 +407,8 @@ export module Cone {
         "white-space": "pre",
         "box-shadow": "0px 1px 2px 2px rgb(0 0 0 / 15%)",
         "font-size": "18px",
-        "line-height": "25px"
+        "line-height": "25px",
+        "-webkit-tap-highlight-color": "transparent"
       };
     }
 
@@ -834,7 +836,7 @@ export module Cone {
         setTimeout(() => {
           const encodedExpectation = container.getAttribute(expectAttrName);
           if (encodedExpectation !== uuidExpectation) { return; }
-          
+
           window.requestAnimationFrame(() => {
             container.style['overflow-y'] = 'scroll';
           });
@@ -864,7 +866,7 @@ export module Cone {
       // generate final string from the resulting element, which until now
       // was very close if not identical to the in-DOM result (document.createElement)
       const result = container.outerHTML;
-      const animationKeyframesHTML = `<style class='oogy-cone-animations'>@keyframes fadeOut { 100% { opacity: 0.2; transform: scale(0.8, 0.8) translate(0, calc(100% + 80px));} } @keyframes fadeIn { 0% { opacity: 0.2; transform: scale(0.8, 0.8) translate(0, calc(100% + 80px)); background: transparent; border-radius: 0px; box-shadow: none; } } @keyframes carousel { 0% { filter: blur(2px) saturate(0%); opacity: 0; } }@keyframes carouselOut { 100% { opacity: 0; filter: saturate(0%); } }</style>`;
+      const animationKeyframesHTML = `<style class='oogy-cone-animations'>@keyframes fadeOut { 100% { opacity: 0.2; transform: scale(0.8, 0.8) translate(0, calc(100% + 80px));} } @keyframes fadeIn { 0% { opacity: 0.2; transform: scale(0.8, 0.8) translate(0, calc(100% + 80px)); background: transparent; border-radius: 0px; box-shadow: none; } } @keyframes carousel { 0% { filter: blur(2px) saturate(0%); opacity: 0; } }@keyframes carouselOut { 100% { opacity: 0; filter: saturate(0%); } }@keyframes delayedFade { 0% { opacity: 0; } 50% { opacity: 0; } 100% { opacity: 1.0; } } </style>`;
 
       const scaleJS = `
       <img 
@@ -907,7 +909,8 @@ export module Cone {
             tabBarContainer.style.left = '50%';
             tabBarContainer.style.width = '370px';
             tabBarContainer.style.height = '60px';
-            tabBarContainer.style.transform = 'translate(-50%, 0%) ' + 'scale(' + scale + ')';
+            const tabScale = scale * 1.5;
+            tabBarContainer.style.transform = 'translate(-50%, 0%) ' + 'scale(' + tabScale + ')';
 
             for (let tab of tabs) { 
               tab.style.display = 'none';
