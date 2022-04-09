@@ -127,7 +127,7 @@ npm run example
    * optional:
    * index (starting at 0) to automatically select when launching website (defaults to 0)
   */
-  "start": 0,
+  "start": 1,
 
   /** content tabs */
   "tabs": [
@@ -160,22 +160,26 @@ npm run example
 
         /**
          * optional: 
-         * duration for carousel if multiple img elements
+         * duration, currently used to determine how long to show img element in a carousel if more than 1 given
          */
-        "duration": 500,
+        "duration": 1000,
 
-        /** list of elements we want to show in this tab */
+        /** array of elements we want to show in this tab */
         "elements": [
           {
-            /** this is an image type */
+            /** 
+             * this is an img element type
+             * expects img, iframe, p, h1, a
+             * can also support just about any HTML type out of the box or with a small upgrade
+             */
             "type": "img",
 
-            /** here is the image src attribute, which can be any URL that works from where the site is hosted */
+            /** here is the image src attribute, which can be any URL (local or remote) */
             "src": "/assets/jumbotron.png"
 
             /**
              * optional:
-             * CSS to apply or override for this element
+             * CSS to apply or override for this element, usually only important for images/media
              */
             "style": {
 
@@ -184,14 +188,13 @@ npm run example
             }
           },
           {
-            /** optionally, we can supply more than 1 image and the jumbotron will carousel through them */
+            /** we can supply more than 1 image and the jumbotron will carousel (fade) through them */
             "type": "img",
 
-            /** here is the image src attribute, which can be any URL that works from where the site is hosted */
             "src": "/assets/hallway.jpg"
           },
           {
-            /** h1 header type, all normal HTML types are used, and inline styles so its easy to customize after generating as well */
+            /** h1 header type, all normal HTML types are used */
             "type": "h1",
 
             /** we'll want to fill in the text for the title elements instead of the `src` attribute */
@@ -209,7 +212,7 @@ npm run example
       "title": "🌗",
       "content": {
         /**
-         * special styler type of content that mutates root styles
+         * special styler type that mutates root styles
          * (used for dark/light theme at the moment in the example)
          */
         "kind": "styler",
@@ -218,7 +221,6 @@ npm run example
          * CSS rules to toggle when this styler is "active"
         */
         "stylerStyle": {
-
           "background": "#2b154d",
           "color": "#fff"
         }
