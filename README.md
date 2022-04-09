@@ -135,23 +135,32 @@ npm run example
       /** shortest possible title of this tab, used on < 800px wide displays */
       "title": "🍦"
 
-      /** expanded title to use on desktop displays */
+      /** 
+       * suggested:
+       * expanded title to use on desktop displays
+       */
       "expanded": "Home",
 
       /** content/"body" of this tab */
       "content": {
-        /** kind, which will help the elements look nice */
+        /** 
+         * kind, which will help the elements look nice
+         * only jumbotron, list, and styler supported
+        */
         "kind": "jumbotron",
 
         /**
-         * optional: alignment of alignable items within the
+         * optional: 
+         * alignment of alignable items within the
          * elements list (excludes large media, ex: img, video)
+         * vertical then horizontal
          * defaults to "bottom-left"
         */
         "align": "bottom-left",
 
         /**
-         * optional: duration for carousel if multiple img elements
+         * optional: 
+         * duration for carousel if multiple img elements
          */
         "duration": 500,
 
@@ -163,6 +172,16 @@ npm run example
 
             /** here is the image src attribute, which can be any URL that works from where the site is hosted */
             "src": "/assets/jumbotron.png"
+
+            /**
+             * optional:
+             * CSS to apply or override for this element
+             */
+            "style": {
+
+              /** example of img css rule */
+              "aspect-ratio": "1920/1080"
+            }
           },
           {
             /** optionally, we can supply more than 1 image and the jumbotron will carousel through them */
@@ -186,12 +205,32 @@ npm run example
         ]
       }
     },
+     {
+      "title": "🌗",
+      "content": {
+        /**
+         * special styler type of content that mutates root styles
+         * (used for dark/light theme at the moment in the example)
+         */
+        "kind": "styler",
+
+        /**
+         * CSS rules to toggle when this styler is "active"
+        */
+        "stylerStyle": {
+
+          "background": "#2b154d",
+          "color": "#fff"
+        }
+      }
+    },
     {
       "title": "🎥",
       "expanded": "Trailer",
 
       "content": {
         "kind": "jumbotron",
+        "align": "bottom-center",
         "elements": [
           {
             "type": "iframe",
@@ -260,6 +299,7 @@ npm run example
 ```
 Julian @insanj Weiss
 github.com/insanj
+cone@oogycanyouhelp.com
 (c) 2022
 ```
 
